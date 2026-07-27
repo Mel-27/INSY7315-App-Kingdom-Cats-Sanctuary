@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Cat_SanctuaryWILL.Splash" parent="Theme.SplashScreen">
+        <!-- Background colour -->
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+
+        <!-- Kingdom Cats logo -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+
+        <item name="windowSplashScreenAnimationDuration">500</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.WILL</item>
+
+
+    </style>
+
+
+
+</resources>
