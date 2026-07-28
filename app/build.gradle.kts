@@ -57,4 +57,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
