@@ -98,7 +98,11 @@ fun AppNavHost() {
         }
 
         // ========== OTHER SCREENS (Placeholders) ==========
-        composable("book_session") { BookSessionPlaceholder(onBack = { navController.popBackStack() }) }
+        composable("book_session") {
+            BookSessionScreen(
+                onBackToHome = { navController.popBackStack("home", inclusive = false) }
+            )
+        }
         composable("cats") { CatProfileScreen(onBookViewingClick = { navController.navigate("book_session") }) }
         composable("events") { EventsPlaceholder(onBack = { navController.popBackStack() }) }
         composable("donation") { DonationPlaceholder(onBack = { navController.popBackStack() }) }
@@ -142,33 +146,6 @@ fun SplashScreen() {
     }
 }
 
-// ========== PLACEHOLDER SCREENS ==========
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BookSessionPlaceholder(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Book a Session", color = Color.White, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = KksRed)
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Book a Session - Coming Soon", fontSize = 18.sp)
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
