@@ -10,8 +10,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayushi.will.ui.theme.KksTextSecondary
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
+import com.ayushi.will.ui.theme.KksCardStroke
+import com.ayushi.will.ui.theme.KksRed
 
-// ---- Static "August 2026" calendar data (non-functional prev/next, matches the mockup) ----
+
 private const val MONTH_LABEL = "August 2026"
 private const val DAYS_IN_MONTH = 31
 private const val FIRST_DAY_COLUMN = 6 // August 1, 2026 falls on a Saturday (0 = Sunday)
@@ -61,6 +74,95 @@ fun BookSessionScreen(
                 color = KksTextSecondary
             )
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "1. SELECT A DATE",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            CalendarCard(selectedDay = selectedDay, onDaySelected = { selectedDay = it })
+
+
+
+        }
+    }
+}
+
+@Composable
+private fun CalendarCard(selectedDay: Int, onDaySelected: (Int) -> Unit) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, KksCardStroke),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.ChevronLeft, contentDescription = "Previous month", tint = KksTextSecondary)
+                Text(text = MONTH_LABEL, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Icon(Icons.Filled.ChevronRight, contentDescription = "Next month", tint = KksTextSecondary)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                WEEKDAY_HEADERS.forEach { header ->
+                    Text(
+                        text = header,
+                        fontSize = 12.sp,
+                        color = KksTextSecondary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val cells = buildList {
+                repeat(FIRST_DAY_COLUMN) { add(null) }
+                for (day in 1..DAYS_IN_MONTH) add(day)
+                while (size % 7 != 0) add(null)
+            }
+
+            cells.chunked(7).forEach { week ->
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    week.forEach { day ->
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 4.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (day != null) {
+                                val isSelected = day == selectedDay
+                                Box(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .clip(CircleShape)
+                                        .background(if (isSelected) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Transparent)
+                                        .clickable { onDaySelected(day) },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = day.toString(),
+                                        color = if (isSelected) androidx.compose.ui.graphics.Color.White else MaterialTheme.colorScheme.onSurface,
+                                        fontSize = 13.sp,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
