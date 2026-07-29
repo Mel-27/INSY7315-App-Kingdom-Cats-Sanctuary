@@ -103,6 +103,81 @@ fun BookSessionScreen(
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "3. REVIEW YOUR BOOKING",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, KksCardStroke),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    ReviewRow(label = "SESSION TYPE", value = "Kitten petting session")
+                    Spacer(modifier = Modifier.height(12.dp))
+                    ReviewRow(
+                        label = "DATE & TIME",
+                        value = "${weekdayNameFor(selectedDay)}, $selectedDay August 2026 · ${selectedSlot.label}"
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(text = "YOUR FULL NAME", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
+                    OutlinedTextField(
+                        value = fullName,
+                        onValueChange = { fullName = it },
+                        singleLine = true,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = KksCardStroke,
+                            focusedBorderColor = KksRed
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(text = "EMAIL ADDRESS", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        singleLine = true,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = KksCardStroke,
+                            focusedBorderColor = KksRed
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = { showConfirmation = true },
+                colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
+                Text("CONFIRM & BOOK", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
         }
     }
 }
@@ -206,6 +281,14 @@ private fun TimeSlotRow(slot: TimeSlot, selected: Boolean, onClick: () -> Unit) 
             Text(text = slot.label, fontWeight = FontWeight.Medium, fontSize = 14.sp)
             Text(text = slot.timeRange, fontSize = 13.sp, color = KksTextSecondary)
         }
+    }
+}
+
+@Composable
+private fun ReviewRow(label: String, value: String) {
+    Column {
+        Text(text = label, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
+        Text(text = value, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
