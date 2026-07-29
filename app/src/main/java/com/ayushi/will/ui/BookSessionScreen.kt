@@ -85,8 +85,24 @@ fun BookSessionScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CalendarCard(selectedDay = selectedDay, onDaySelected = { selectedDay = it })
 
+            Spacer(modifier = Modifier.height(24.dp))
 
-
+            Text(
+                text = "2. CHOOSE A TIME",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                timeSlots.forEach { slot ->
+                    TimeSlotRow(
+                        slot = slot,
+                        selected = slot == selectedSlot,
+                        onClick = { selectedSlot = slot }
+                    )
+                }
+            }
         }
     }
 }
@@ -165,4 +181,31 @@ private fun CalendarCard(selectedDay: Int, onDaySelected: (Int) -> Unit) {
             }
         }
     }
+
+
+
 }
+
+@Composable
+private fun TimeSlotRow(slot: TimeSlot, selected: Boolean, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) KksRed else KksCardStroke)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = slot.label, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+            Text(text = slot.timeRange, fontSize = 13.sp, color = KksTextSecondary)
+        }
+    }
+}
+
