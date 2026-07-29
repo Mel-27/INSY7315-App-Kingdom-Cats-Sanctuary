@@ -41,12 +41,15 @@ import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksStar
 import com.ayushi.will.ui.theme.KksTextSecondary
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
+@Preview
 fun HomeScreen(
     onCatClick: (Cat) -> Unit = {},
     onBookSessionClick: () -> Unit = {},
+    onMeetCatsClick: () -> Unit = {},
     onDonateClick: () -> Unit = {},
     onCommunityClick: () -> Unit = {},
     onRemindersClick: () -> Unit = {},
@@ -75,6 +78,7 @@ fun HomeScreen(
             item {
                 HeroSection(
                     onBookSessionClick = onBookSessionClick,
+                    onMeetCatsClick = onMeetCatsClick,
                     onDonateClick = onDonateClick,
                     onEventsClick = onEventsClick,
                     onMerchandiseClick = onMerchandiseClick,
@@ -145,6 +149,7 @@ fun HomeScreen(
 @Composable
 private fun HeroSection(
     onBookSessionClick: () -> Unit,
+    onMeetCatsClick: () -> Unit,
     onDonateClick: () -> Unit,
     onEventsClick: () -> Unit,
     onMerchandiseClick: () -> Unit,
@@ -368,7 +373,7 @@ private fun HeroSection(
                         )
                     }
                     OutlinedButton(
-                        onClick = onBookSessionClick,
+                        onClick = onMeetCatsClick,
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.White
                         ),

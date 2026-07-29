@@ -88,6 +88,7 @@ fun AppNavHost() {
                     // We'll pass the cat back through a callback
                 },
                 onBookSessionClick = { navController.navigate("book_session") },
+                onMeetCatsClick = { navController.navigate("cats") },
                 onDonateClick = { navController.navigate("donation") },
                 onCommunityClick = { navController.navigate("community") },
                 onRemindersClick = { navController.navigate("reminders") },
@@ -99,6 +100,7 @@ fun AppNavHost() {
 
         // ========== OTHER SCREENS (Placeholders) ==========
         composable("book_session") { BookSessionPlaceholder(onBack = { navController.popBackStack() }) }
+        composable("cats") { CatProfileScreen(onBookViewingClick = { navController.navigate("book_session") }) }
         composable("events") { EventsPlaceholder(onBack = { navController.popBackStack() }) }
         composable("donation") { DonationPlaceholder(onBack = { navController.popBackStack() }) }
         composable("merchandise") { MerchandisePlaceholder(onBack = { navController.popBackStack() }) }
