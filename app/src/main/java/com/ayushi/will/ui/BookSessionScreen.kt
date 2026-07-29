@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.ui.window.Dialog
 
 
 private const val MONTH_LABEL = "August 2026"
@@ -178,6 +180,18 @@ fun BookSessionScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            if (showConfirmation) {
+                BookingConfirmedDialog(
+                    email = email,
+                    dateLabel = "${weekdayNameFor(selectedDay)}, $selectedDay August 2026",
+                    timeLabel = "${selectedSlot.label} (${selectedSlot.timeRange})",
+                    onBackToHome = {
+                        showConfirmation = false
+                        onBackToHome()
+                    }
+                )
+            }
+
         }
     }
 }
@@ -289,6 +303,94 @@ private fun ReviewRow(label: String, value: String) {
     Column {
         Text(text = label, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
         Text(text = value, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+@Composable
+private fun BookingConfirmedDialog(
+    email: String,
+    dateLabel: String,
+    timeLabel: String,
+    onBackToHome: () -> Unit
+) {
+    Dialog(onDismissRequest = onBackToHome) {
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(KksRed.copy(alpha = 0.12f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(Icons.Filled.Check, contentDescription = null, tint = KksRed)
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Booking confirmed!",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "A confirmation and reminder will be sent to $email.",
+                    fontSize = 13.sp,
+                    color = KksTextSecondary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        SummaryRow("Session", "Kitten Petting Session")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SummaryRow("Date", dateLabel)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SummaryRow("Time", timeLabel)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = onBackToHome,
+                    colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text("BACK TO HOME", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SummaryRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = label, fontSize = 13.sp, color = KksTextSecondary)
+        Text(text = value, fontSize = 13.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.End)
     }
 }
 
