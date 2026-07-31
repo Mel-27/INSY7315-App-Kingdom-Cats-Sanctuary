@@ -10,6 +10,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayushi.will.ui.theme.KksTextSecondary
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import com.ayushi.will.ui.theme.KksCardStroke
+import com.ayushi.will.ui.theme.KksRed
+import androidx.compose.foundation.border
+import androidx.compose.ui.draw.clip
 
 private val amountOptions = listOf("R50", "R100", "R250", "R500")
 
@@ -59,7 +67,71 @@ fun DonationScreen(
                 fontSize = 13.sp,
                 color = KksTextSecondary
             )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "1. CHOOSE AN AMOUNT",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                amountOptions.forEach { amount ->
+                    AmountChip(
+                        label = amount,
+                        selected = !isCustomSelected && amount == selectedAmount,
+                        onClick = {
+                            selectedAmount = amount
+                            isCustomSelected = false
+                        }
+                    )
+                }
+                AmountChip(
+                    label = "Custom amount",
+                    selected = isCustomSelected,
+                    onClick = { isCustomSelected = true }
+                )
+            }
+            if (isCustomSelected) {
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = customAmount,
+                    onValueChange = { customAmount = it },
+                    placeholder = { Text("Enter amount (R)") },
+                    singleLine = true,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = KksCardStroke,
+                        focusedBorderColor = KksRed
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
         }
+    }
+}
+
+@Composable
+private fun AmountChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (selected) KksRed else Color.Transparent)
+            .border(
+                width = if (selected) 0.dp else 1.dp,
+                color = KksCardStroke,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = label,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = if (selected) Color.White else MaterialTheme.colorScheme.onSurface
+        )
     }
 }
