@@ -128,6 +128,62 @@ fun DonationScreen(
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "3. YOUR DETAILS",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(text = "FULL NAME", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
+            OutlinedTextField(
+                value = fullName,
+                onValueChange = { fullName = it },
+                singleLine = true,
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = KksCardStroke,
+                    focusedBorderColor = KksRed
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(text = "EMAIL ADDRESS", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = KksTextSecondary)
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                singleLine = true,
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = KksCardStroke,
+                    focusedBorderColor = KksRed
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = { showConfirmation = true },
+                colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
+                Text("CONTINUE TO DONATE", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
         }
     }
