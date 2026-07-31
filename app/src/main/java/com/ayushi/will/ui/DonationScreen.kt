@@ -23,9 +23,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.compose.foundation.horizontalScroll
 
 private val amountOptions = listOf("R50", "R100", "R250", "R500")
 
@@ -84,7 +84,10 @@ fun DonationScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.horizontalScroll(rememberScrollState())
+            ) {
                 amountOptions.forEach { amount ->
                     AmountChip(
                         label = amount,
@@ -96,7 +99,7 @@ fun DonationScreen(
                     )
                 }
                 AmountChip(
-                    label = "Custom amount",
+                    label = "Custom",
                     selected = isCustomSelected,
                     onClick = { isCustomSelected = true }
                 )
