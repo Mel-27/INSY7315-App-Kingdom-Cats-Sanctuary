@@ -105,7 +105,11 @@ fun AppNavHost() {
         }
         composable("cats") { CatProfileScreen(onBookViewingClick = { navController.navigate("book_session") }) }
         composable("events") { EventsPlaceholder(onBack = { navController.popBackStack() }) }
-        composable("donation") { DonationPlaceholder(onBack = { navController.popBackStack() }) }
+        composable("donation") {
+            DonationScreen(
+                onBackToHome = { navController.popBackStack("home", inclusive = false) }
+            )
+        }
         composable("merchandise") { MerchandisePlaceholder(onBack = { navController.popBackStack() }) }
         composable("community") { CommunityPlaceholder(onBack = { navController.popBackStack() }) }
         composable("reminders") { RemindersPlaceholder(onBack = { navController.popBackStack() }) }
@@ -174,32 +178,6 @@ fun EventsPlaceholder(onBack: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DonationPlaceholder(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Donate", color = Color.White, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = KksRed)
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Donate - Coming Soon", fontSize = 18.sp)
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
