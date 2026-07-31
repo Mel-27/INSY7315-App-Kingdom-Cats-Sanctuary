@@ -1,5 +1,6 @@
 package com.ayushi.will.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -109,6 +110,25 @@ fun DonationScreen(
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "2. CHOOSE A PAYMENT METHOD",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                paymentMethods.forEach { method ->
+                    PaymentMethodCard(
+                        method = method,
+                        selected = method == selectedPayment,
+                        onClick = { selectedPayment = method }
+                    )
+                }
+            }
+
         }
     }
 }
@@ -133,5 +153,29 @@ private fun AmountChip(label: String, selected: Boolean, onClick: () -> Unit) {
             fontWeight = FontWeight.Medium,
             color = if (selected) Color.White else MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+
+@Composable
+private fun PaymentMethodCard(method: PaymentMethod, selected: Boolean, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) KksRed else KksCardStroke)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = method.name, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text(text = method.subtitle, fontSize = 10.sp, color = KksTextSecondary)
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = method.description, fontSize = 12.sp, color = KksTextSecondary)
+        }
     }
 }
