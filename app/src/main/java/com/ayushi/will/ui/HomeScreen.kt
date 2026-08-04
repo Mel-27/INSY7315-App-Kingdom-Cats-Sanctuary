@@ -64,72 +64,101 @@ fun HomeScreen(
     var selectedCat by remember { mutableStateOf<Cat?>(null) }
     var showCatDialog by remember { mutableStateOf(false) }
 
+    // Navigation Drawer State
+    var drawerOpen by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         CatRepository.observeCats { cats = it }
         CatRepository.observeFounders { founders = it }
         CatRepository.observeReviews { reviews = it }
     }
 
-    Surface(color = MaterialTheme.colorScheme.background) {
-        LazyColumn(
+    // Main content with drawer overlay
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Main Content
+        Surface(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp)
+            color = MaterialTheme.colorScheme.background
         ) {
-            item {
-                HeroSection(
-                    onBookSessionClick = onBookSessionClick,
-                    onMeetCatsClick = onMeetCatsClick,
-                    onDonateClick = onDonateClick,
-                    onEventsClick = onEventsClick,
-                    onMerchandiseClick = onMerchandiseClick,
-                    onRemindersClick = onRemindersClick,
-                    onProfileClick = onProfileClick
-                )
-            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp)
+            ) {
+                item {
+                    HeroSection(
+                        onMenuClick = { drawerOpen = true },
+                        onBookSessionClick = onBookSessionClick,
+                        onMeetCatsClick = onMeetCatsClick,
+                        onDonateClick = onDonateClick,
+                        onEventsClick = onEventsClick,
+                        onMerchandiseClick = onMerchandiseClick,
+                        onRemindersClick = onRemindersClick,
+                        onProfileClick = onProfileClick
+                    )
+                }
 
-            item {
-                NoKillPromiseSection()
-            }
+                item {
+                    NoKillPromiseSection()
+                }
 
-            item {
-                SectionHeader(
-                    title = "Looking for a forever home",
-                    subtitle = "A few of our residents waiting to meet you!",
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-                CatsShowcase(
-                    cats = cats,
-                    onCatClick = { cat ->
-                        selectedCat = cat
-                        showCatDialog = true
-                    }
-                )
-            }
+                item {
+                    SectionHeader(
+                        title = "Looking for a forever home",
+                        subtitle = "A few of our residents waiting to meet you!",
+                        modifier = Modifier.padding(top = 24.dp)
+                    )
+                    CatsShowcase(
+                        cats = cats,
+                        onCatClick = { cat ->
+                            selectedCat = cat
+                            showCatDialog = true
+                        }
+                    )
+                }
 
-            item {
-                FoundersSection(founders = founders)
-            }
+                item {
+                    FoundersSection(founders = founders)
+                }
 
-            item {
-                HowYouCanHelpSection(
-                    onDonateClick = onDonateClick,
-                    onBookSessionClick = onBookSessionClick,
-                    onCommunityClick = onCommunityClick
-                )
-            }
+                item {
+                    HowYouCanHelpSection(
+                        onDonateClick = onDonateClick,
+                        onBookSessionClick = onBookSessionClick,
+                        onCommunityClick = onCommunityClick
+                    )
+                }
 
-            item {
-                ReviewsSection(reviews = reviews)
-            }
+                item {
+                    ReviewsSection(reviews = reviews)
+                }
 
-            item {
-                CommunityCTASection(onCommunityClick = onCommunityClick)
-            }
+                item {
+                    CommunityCTASection(onCommunityClick = onCommunityClick)
+                }
 
-            item {
-                FooterSection()
+                item {
+                    FooterSection()
+                }
             }
         }
+
+        // ========== SLIDE-IN NAVIGATION DRAWER ==========
+        NavigationDrawer(
+            drawerState = drawerOpen,
+            onDismiss = { drawerOpen = false },
+            onNavigate = { destination ->
+                drawerOpen = false
+                when (destination) {
+                    "home" -> { /* Already on home */ }
+                    "adopt" -> onBookSessionClick()
+                    "donate" -> onDonateClick()
+                    "events" -> onEventsClick()
+                    "merchandise" -> onMerchandiseClick()
+                    "community" -> onCommunityClick()
+                    "profile" -> onProfileClick()
+                }
+            }
+        )
     }
 
     // Cat Detail Popup
@@ -145,9 +174,196 @@ fun HomeScreen(
     }
 }
 
-// ========== 1. HERO SECTION WITH CAT BACKGROUND ==========
+// ========== NAVIGATION DRAWER ==========
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun NavigationDrawer(
+    drawerState: Boolean,
+    onDismiss: () -> Unit,
+    onNavigate: (String) -> Unit
+) {
+    // Animated slide-in from left
+    AnimatedVisibility(
+        visible = drawerState,
+        enter = slideInHorizontally(
+            initialOffsetX = { -it },
+            animationSpec = tween(300, easing = FastOutSlowInEasing)
+        ) + fadeIn(animationSpec = tween(200)),
+        exit = slideOutHorizontally(
+            targetOffsetX = { -it },
+            animationSpec = tween(300, easing = FastOutSlowInEasing)
+        ) + fadeOut(animationSpec = tween(200))
+    ) {
+        // Scrim (dim background)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+                .clickable { onDismiss() }
+        ) {
+            // Drawer Content
+            Card(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(280.dp)
+                    .align(Alignment.CenterStart),
+                shape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 0.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                ) {
+                    // Drawer Header with Logo
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_logo),
+                            contentDescription = "Logo",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                "Kingdom Cats",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                color = KksRed
+                            )
+                            Text(
+                                "Sanctuary",
+                                fontSize = 12.sp,
+                                color = KksTextSecondary
+                            )
+                        }
+                    }
+
+                    Divider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = KksCardStroke
+                    )
+
+                    // Navigation Items
+                    DrawerItem(
+                        icon = Icons.Filled.Home,
+                        title = "Home",
+                        onClick = { onNavigate("home") },
+                        isSelected = true
+                    )
+                    DrawerItem(
+                        icon = Icons.Filled.Pets,
+                        title = "Adopt",
+                        onClick = { onNavigate("adopt") }
+                    )
+                    DrawerItem(
+                        icon = Icons.Filled.VolunteerActivism,
+                        title = "Donate",
+                        onClick = { onNavigate("donate") }
+                    )
+                    DrawerItem(
+                        icon = Icons.Filled.CalendarMonth,
+                        title = "Events",
+                        onClick = { onNavigate("events") }
+                    )
+                    DrawerItem(
+                        icon = Icons.Filled.ShoppingCart,
+                        title = "Merchandise",
+                        onClick = { onNavigate("merchandise") }
+                    )
+                    // CHANGED: Use Groups instead of Community (which doesn't exist)
+                    DrawerItem(
+                        icon = Icons.Filled.People,
+                        title = "Community",
+                        onClick = { onNavigate("community") }
+                    )
+                    DrawerItem(
+                        icon = Icons.Filled.Person,
+                        title = "Profile",
+                        onClick = { onNavigate("profile") }
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    // Footer
+                    Divider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = KksCardStroke
+                    )
+                    Text(
+                        "© 2026 Kingdom Cats",
+                        fontSize = 11.sp,
+                        color = KksTextSecondary,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawerItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    onClick: () -> Unit,
+    isSelected: Boolean = false
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) KksRed.copy(alpha = 0.1f) else Color.Transparent
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                icon,
+                contentDescription = title,
+                tint = if (isSelected) KksRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(14.dp))
+            Text(
+                title,
+                fontSize = 15.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                color = if (isSelected) KksRed else MaterialTheme.colorScheme.onSurface
+            )
+            if (isSelected) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    Icons.Filled.Check,
+                    contentDescription = "Selected",
+                    tint = KksRed,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
+// ========== 1. HERO SECTION ==========
 @Composable
 private fun HeroSection(
+    onMenuClick: () -> Unit,
     onBookSessionClick: () -> Unit,
     onMeetCatsClick: () -> Unit,
     onDonateClick: () -> Unit,
@@ -156,12 +372,10 @@ private fun HeroSection(
     onRemindersClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp) // Fixed height for hero section
+            .height(400.dp)
     ) {
         // Background Cat Image
         Box(
@@ -177,17 +391,15 @@ private fun HeroSection(
                     )
                 )
         ) {
-            // Main cat hero image (like website)
             Image(
                 painter = painterResource(id = R.drawable.cat_home),
                 contentDescription = "Cat Hero Background",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.85f) // Slightly transparent to see overlay
+                    .alpha(0.85f)
             )
 
-            // Dark overlay for text readability
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -214,8 +426,8 @@ private fun HeroSection(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Menu Icon
-                IconButton(onClick = { showMenu = !showMenu }) {
+                // Menu Icon - Opens slide-in drawer
+                IconButton(onClick = onMenuClick) {
                     Icon(
                         Icons.Filled.Menu,
                         contentDescription = "Menu",
@@ -228,7 +440,6 @@ private fun HeroSection(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Cat silhouette logo (transparent background)
                     Image(
                         painter = painterResource(id = R.drawable.ic_logo),
                         contentDescription = "Cat Logo",
@@ -241,12 +452,12 @@ private fun HeroSection(
                         text = "Kingdom Cats",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 12.sp
                     )
                     Text(
-                        text = "Sanctuary",
+                        text = " Sanctuary",
                         color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Light
                     )
                 }
@@ -268,61 +479,15 @@ private fun HeroSection(
                 }
             }
 
-            // Menu Dropdown
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Home") },
-                    onClick = { showMenu = false }
-                )
-                DropdownMenuItem(
-                    text = { Text("Adopt") },
-                    onClick = {
-                        showMenu = false
-                        onBookSessionClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Donate") },
-                    onClick = {
-                        showMenu = false
-                        onDonateClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Events") },
-                    onClick = {
-                        showMenu = false
-                        onEventsClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Merchandise") },
-                    onClick = {
-                        showMenu = false
-                        onMerchandiseClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Community") },
-                    onClick = {
-                        showMenu = false
-                        // onCommunityClick()
-                    }
-                )
-            }
-
             Spacer(modifier = Modifier.weight(1f))
 
-            // Hero Text - Centered on image
+            // Hero Text
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "NON-KILL RESCUE SANCTUARY",
+                    text = "NO-KILL RESCUE SANCTUARY",
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 12.sp,
                     letterSpacing = 2.sp,
