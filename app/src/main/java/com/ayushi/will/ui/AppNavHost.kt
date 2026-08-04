@@ -123,28 +123,27 @@ fun SplashScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(KksRed),
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Logo
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Cat Splash Logo
             Image(
-                painter = painterResource(id = R.drawable.ic_logo),
+                painter = painterResource(id = R.drawable.cat_splash_logo),
                 contentDescription = "Kingdom Cats Sanctuary Logo",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(180.dp) // Adjust size as needed
             )
+
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                "Kingdom Cats Sanctuary",
-                color = Color.White,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                "A HEAVEN FOR FELINES",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp,
-                letterSpacing = 2.sp
+
+            // Added a subtle loading indicator
+            CircularProgressIndicator(
+                modifier = Modifier.size(32.dp),
+                color = KksRed,
+                strokeWidth = 3.dp
             )
         }
     }
@@ -233,6 +232,7 @@ fun CommunityPlaceholder(onBack: () -> Unit) {
     }
 }
 
+// ========== PLACEHOLDER SCREENS ==========
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemindersPlaceholder(onBack: () -> Unit) {
