@@ -26,10 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.horizontalScroll
-
+import androidx.annotation.DrawableRes
+import com.ayushi.will.R
 private val amountOptions = listOf("R50", "R100", "R250", "R500")
 
 private data class PaymentMethod(val name: String, val subtitle: String, val description: String)
+private data class DonationItem(
+    val name: String,
+    val description: String,
+    @DrawableRes val imageRes: Int
+)
 
 private val paymentMethods = listOf(
     PaymentMethod(
@@ -44,6 +50,28 @@ private val paymentMethods = listOf(
     )
 )
 
+private val donationItems = listOf(
+    DonationItem(
+        name = "Equipment",
+        description = "Carriers, scratching posts, litter boxes, and general sanctuary equipment.",
+        imageRes = R.drawable.donate_equipment
+    ),
+    DonationItem(
+        name = "Toys & blankets",
+        description = "Soft blankets, cat toys, and scratching pads — comfort and play for our residents.",
+        imageRes = R.drawable.donate_toys
+    ),
+    DonationItem(
+        name = "Food",
+        description = "Dry and wet cat food to help feed over 300 cats in our care.",
+        imageRes = R.drawable.donate_food
+    ),
+    DonationItem(
+        name = "Cleaning supplies",
+        description = "Disinfectant, litter, and sanitation supplies to keep enclosures safe and healthy.",
+        imageRes = R.drawable.donate_cleaning
+    )
+)
 @Composable
 fun DonationScreen(
     onBackToHome: () -> Unit = {}
@@ -344,3 +372,4 @@ private fun DonationSummaryRow(label: String, value: String) {
         Text(text = value, fontSize = 13.sp, fontWeight = FontWeight.Medium)
     }
 }
+
