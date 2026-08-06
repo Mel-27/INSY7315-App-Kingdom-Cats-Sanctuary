@@ -28,6 +28,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.horizontalScroll
 import androidx.annotation.DrawableRes
 import com.ayushi.will.R
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.withStyle
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.ui.text.TextStyle
 private val amountOptions = listOf("R50", "R100", "R250", "R500")
 
 private data class PaymentMethod(val name: String, val subtitle: String, val description: String)
@@ -223,6 +231,13 @@ fun DonationScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            DonateItemsSection(
+                items = donationItems,
+                onContactUs = { /* navigate or open contact info later */ }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             if (showConfirmation) {
                 val amountLabel = if (isCustomSelected) "R$customAmount" else (selectedAmount ?: "R0")
                 DonationConfirmedDialog(
@@ -373,3 +388,82 @@ private fun DonationSummaryRow(label: String, value: String) {
     }
 }
 
+@Composable
+private fun DonateItemsSection(
+    items: List<DonationItem>,
+    onContactUs: () -> Unit = {}
+) {
+    Column(modifier = Modifier.padding(top = 32.dp)) {
+        Text(
+            text = "Prefer to donate items?",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+
+        val annotatedText = buildAnnotatedString {
+            append("Physical supplies keep the sanctuary running day to day. Here's what we always need — drop off at the sanctuary, or ")
+            pushStringAnnotation(tag = "CONTACT", annotation = "contact")
+            withStyle(SpanStyle(color = KksRed, fontWeight = FontWeight.SemiBold)) {
+                append("contact us")
+            }
+            pop()
+            append(" to arrange collection.")
+        }
+        ClickableText(
+            text = annotatedText,
+            style = TextStyle(fontSize = 13.sp, color = KksTextSecondary, textAlign = TextAlign.Center),
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { offset ->
+                annotatedText.getStringAnnotations("CONTACT", offset, offset)
+                    .firstOrNull()?.let { onContactUs() }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        items.chunked(2).forEach { rowItems ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                rowItems.forEach { item ->
+                    DonationItemCard(item = item, modifier = Modifier.weight(1f))
+                }
+                if (rowItems.size < 2) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+private fun DonationItemCard(item: DonationItem, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, KksCardStroke)
+    ) {
+        Column {
+            Image(
+                painter = painterResource(id = item.imageRes),
+                contentDescription = item.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            )
+            Column(modifier = Modifier.padding(12.dp)) {
+                Text(text = item.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = item.description, fontSize = 11.sp, color = KksTextSecondary)
+            }
+        }
+    }
+}
