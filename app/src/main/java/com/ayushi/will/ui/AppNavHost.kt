@@ -104,7 +104,7 @@ fun AppNavHost() {
             )
         }
         composable("cats") { CatProfileScreen(onBookViewingClick = { navController.navigate("book_session") }) }
-        composable("events") { EventsPlaceholder(onBack = { navController.popBackStack() }) }
+        composable("events") { EventsScreen(onViewCalendar = {}, onRsvp = {}) }
         composable("donation") {
             DonationScreen(
                 onBackToHome = { navController.popBackStack("home", inclusive = false) }
