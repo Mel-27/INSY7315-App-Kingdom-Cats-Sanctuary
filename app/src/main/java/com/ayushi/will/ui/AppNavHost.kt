@@ -83,8 +83,7 @@ fun AppNavHost() {
         composable("home") {
             HomeScreen(
                 onCatClick = { cat ->
-                    // Show cat details as a dialog - handled inside HomeScreen
-                    // We'll pass the cat back through a callback
+                    // Show cat details as a dialog - handled inside HomeScree
                 },
                 onBookSessionClick = { navController.navigate("book_session") },
                 onMeetCatsClick = { navController.navigate("cats") },
@@ -94,6 +93,19 @@ fun AppNavHost() {
                 onProfileClick = { navController.navigate("profile") },
                 onEventsClick = { navController.navigate("events") },
                 onMerchandiseClick = { navController.navigate("merchandise") }
+            )
+        }
+
+        // ========== COMMUNITY BLOG SCREEN ==========
+        composable("community") {
+            CommunityBlogScreen(
+                onBack = { navController.popBackStack() },
+                onNewPost = {
+                    // TODO: Navigate to New Post screen when created
+                },
+                onPostClick = { post ->
+                    // TODO: Navigate to Post Detail screen when created
+                }
             )
         }
 
@@ -111,7 +123,6 @@ fun AppNavHost() {
             )
         }
         composable("merchandise") { MerchandisePlaceholder(onBack = { navController.popBackStack() }) }
-        composable("community") { CommunityPlaceholder(onBack = { navController.popBackStack() }) }
         composable("reminders") { RemindersPlaceholder(onBack = { navController.popBackStack() }) }
         composable("profile") { ProfilePlaceholder(onBack = { navController.popBackStack() }) }
     }
@@ -201,33 +212,6 @@ fun MerchandisePlaceholder(onBack: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Text("Merchandise - Coming Soon", fontSize = 18.sp)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CommunityPlaceholder(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Community", color = Color.White, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = KksRed)
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Community Blog - Coming Soon", fontSize = 18.sp)
         }
     }
 }
