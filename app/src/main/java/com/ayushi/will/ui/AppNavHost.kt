@@ -123,8 +123,8 @@ fun AppNavHost() {
             )
         }
         composable("merchandise") { MerchandisePlaceholder(onBack = { navController.popBackStack() }) }
-        composable("reminders") { RemindersPlaceholder(onBack = { navController.popBackStack() }) }
-        composable("profile") { ProfilePlaceholder(onBack = { navController.popBackStack() }) }
+        composable("reminders") { RemindersScreen() }
+        composable("profile") { ProfileScreen(onLogout = { navController.navigate("login") { popUpTo("home") { inclusive = true } } }) }
     }
 }
 
