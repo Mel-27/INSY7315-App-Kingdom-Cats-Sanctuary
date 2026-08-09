@@ -9,7 +9,8 @@ data class Founder(
     val id: String = "",
     val name: String = "",
     val role: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val localImageRes: Int? = null
 )
 
 data class Review(
@@ -76,8 +77,18 @@ object CatRepository {
         )
 
         _founders.value = listOf(
-            Founder(id = "f1", name = "Greg Bower", role = "Co-FOUNDER"),
-            Founder(id = "f2", name = "Jenny Bower", role = "Co-FOUNDER")
+            Founder(
+                id = "f1",
+                name = "Greg Bower",
+                role = "CO-FOUNDER",
+                localImageRes = R.drawable.founder_1
+            ),
+            Founder(
+                id = "f2",
+                name = "Jenny Bower",
+                role = "CO-FOUNDER",
+                localImageRes = R.drawable.founder_2
+            )
         )
 
         _reviews.value = listOf(

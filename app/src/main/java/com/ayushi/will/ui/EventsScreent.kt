@@ -71,7 +71,8 @@ private val sanctuaryEvents = listOf(
 @Composable
 fun EventsScreen(
     onViewCalendar: () -> Unit = {},
-    onRsvp: (String) -> Unit = {}
+    onRsvp: (String) -> Unit = {},
+    onMenuClick: () -> Unit = {}
 ) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(

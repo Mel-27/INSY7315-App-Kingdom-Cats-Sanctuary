@@ -48,7 +48,8 @@ private val timeSlots = listOf(
 
 @Composable
 fun BookSessionScreen(
-    onBackToHome: () -> Unit = {}
+    onBackToHome: () -> Unit = {},
+    onMenuClick: () -> Unit = {}
 ) {
     var selectedDay by remember { mutableStateOf(19) }
     var selectedSlot by remember { mutableStateOf(timeSlots[1]) }

@@ -1,6 +1,5 @@
 package com.ayushi.will.ui
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,9 +39,9 @@ import com.ayushi.will.ui.theme.KksWhite
 fun CommunityBlogScreen(
     onBack: () -> Unit,
     onNewPost: () -> Unit,
-    onPostClick: (CommunityPost) -> Unit
+    onPostClick: (CommunityPost) -> Unit,
+    onMenuClick: () -> Unit
 ) {
-    // Dialog states
     var showNewPostDialog by remember { mutableStateOf(false) }
     var showPostDetailDialog by remember { mutableStateOf(false) }
     var selectedPost by remember { mutableStateOf<CommunityPost?>(null) }
@@ -50,116 +49,129 @@ fun CommunityBlogScreen(
     var alertPost by remember { mutableStateOf<CommunityPost?>(null) }
     var showExploreDialog by remember { mutableStateOf(false) }
 
-    // Sample data with image support
-    val posts = remember {
-        listOf(
-            CommunityPost(
-                id = "1",
-                authorName = "Sarah Chen",
-                authorInitials = "SC",
-                type = "Expert Tip",
-                title = "Creating a 'Safe Room' for Your New Cat",
-                content = "When bringing a rescue home, start them in a small, quiet space with their bed, litter box, and food to prevent overwhelm. This helps them adjust gradually and build confidence in their new environment.",
-                isUrgent = false,
-                isPinned = false,
-                likes = 89,
-                dislikes = 4,
-                commentCount = 12,
-                timeAgo = "2 hours ago",
-                imageUrl = "",
-                isAdoptionStory = false,
-                hasImage = true,
-                localImageRes = R.drawable.cat_ginger
-            ),
-            CommunityPost(
-                id = "2",
-                authorName = "Mochi's Mom",
-                authorInitials = "MM",
-                type = "Adoption Story",
-                title = "Adopted Mochi today!",
-                content = "He's already claiming the best spot on the sofa. Thank you Kingdom Cats Sanctuary! ❤️ #AdoptionSuccess #NewBeginnings",
-                isUrgent = false,
-                isPinned = false,
-                likes = 234,
-                dislikes = 2,
-                commentCount = 45,
-                timeAgo = "3 hours ago",
-                imageUrl = "",
-                isAdoptionStory = true,
-                hasImage = true,
-                localImageRes = R.drawable.cat_oliver
-            ),
-            CommunityPost(
-                id = "3",
-                authorName = "Oliver Alert",
-                authorInitials = "OA",
-                type = "Missing Cat",
-                title = "⚠️ MISSING: OLIVER",
-                content = "Last seen in Oak Ridge area. Please contact us immediately if you see him. He's a friendly tabby with a red collar.",
-                isUrgent = true,
-                isPinned = true,
-                likes = 56,
-                dislikes = 0,
-                commentCount = 8,
-                timeAgo = "2h ago",
-                imageUrl = "",
-                isAdoptionStory = false,
-                hasImage = true,
-                localImageRes = R.drawable.cat_oliver
-            ),
-            CommunityPost(
-                id = "4",
-                authorName = "Luna's Rescuer",
-                authorInitials = "LR",
-                type = "Found Cat",
-                title = "FOUND: LUNA",
-                content = "Safe at Sanctuary. Checking for chip... She's a beautiful black cat, very friendly.",
-                isUrgent = false,
-                isPinned = false,
-                likes = 45,
-                dislikes = 1,
-                commentCount = 5,
-                timeAgo = "5h ago",
-                imageUrl = "",
-                isAdoptionStory = false,
-                hasImage = true,
-                localImageRes = R.drawable.cat_midnight
-            ),
-            CommunityPost(
-                id = "5",
-                authorName = "Whiskers Blog",
-                authorInitials = "WB",
-                type = "Blog Post",
-                title = "How to Cat-Proof Your Modern Home",
-                content = "Protect your furniture and keep your cat safe with these designer-approved tips for a harmonious living space. From cord management to plant safety, we've got you covered.",
-                isUrgent = false,
-                isPinned = false,
-                likes = 120,
-                dislikes = 3,
-                commentCount = 18,
-                timeAgo = "8 min read",
-                imageUrl = "",
-                isAdoptionStory = false,
-                hasImage = true,
-                localImageRes = R.drawable.cat_ginger
-            ),
-            CommunityPost(
-                id = "6",
-                authorName = "Nutrition Guide",
-                authorInitials = "NG",
-                type = "Blog Post",
-                title = "Decoding the Label: What Your Cat Really Needs",
-                content = "Learn how to spot high-quality ingredients and avoid common fillers in commercial cat food brands. Your cat's health starts with what's in their bowl.",
-                isUrgent = false,
-                isPinned = false,
-                likes = 98,
-                dislikes = 2,
-                commentCount = 14,
-                timeAgo = "8 min read",
-                imageUrl = "",
-                isAdoptionStory = false,
-                hasImage = true,
-                localImageRes = R.drawable.cat_midnight
+    var postsState by remember {
+        mutableStateOf(
+            listOf(
+                CommunityPost(
+                    id = "1",
+                    authorName = "Sarah Chen",
+                    authorInitials = "SC",
+                    type = "Expert Tip",
+                    title = "Creating a 'Safe Room' for Your New Cat",
+                    content = "When bringing a rescue home, start them in a small, quiet space with their bed, litter box, and food to prevent overwhelm.",
+                    isUrgent = false,
+                    isPinned = false,
+                    likes = 89,
+                    dislikes = 4,
+                    commentCount = 12,
+                    timeAgo = "2 hours ago",
+                    imageUrl = "",
+                    isAdoptionStory = false,
+                    hasImage = true,
+                    localImageRes = R.drawable.room_cat,
+                    isLiked = false,
+                    isDisliked = false
+                ),
+                CommunityPost(
+                    id = "2",
+                    authorName = "Mochi's Mom",
+                    authorInitials = "MM",
+                    type = "Adoption Story",
+                    title = "Adopted Mochi today!",
+                    content = "He's already claiming the best spot on the sofa. Thank you Kingdom Cats Sanctuary! ❤️",
+                    isUrgent = false,
+                    isPinned = false,
+                    likes = 234,
+                    dislikes = 2,
+                    commentCount = 45,
+                    timeAgo = "3 hours ago",
+                    imageUrl = "",
+                    isAdoptionStory = true,
+                    hasImage = true,
+                    localImageRes = R.drawable.cat_ginger,
+                    isLiked = false,
+                    isDisliked = false
+                ),
+                CommunityPost(
+                    id = "3",
+                    authorName = "Oliver Alert",
+                    authorInitials = "OA",
+                    type = "Missing Cat",
+                    title = "MISSING: OLIVER",
+                    content = "Last seen in Oak Ridge area. Please contact us immediately if you see him.",
+                    isUrgent = true,
+                    isPinned = true,
+                    likes = 56,
+                    dislikes = 0,
+                    commentCount = 8,
+                    timeAgo = "2h ago",
+                    imageUrl = "",
+                    isAdoptionStory = false,
+                    hasImage = true,
+                    localImageRes = R.drawable.cat_oliver,
+                    isLiked = false,
+                    isDisliked = false
+                ),
+                CommunityPost(
+                    id = "4",
+                    authorName = "Luna's Rescuer",
+                    authorInitials = "LR",
+                    type = "Found Cat",
+                    title = "FOUND: LUNA",
+                    content = "Safe at Sanctuary. Checking for chip... She's a beautiful black cat, very friendly.",
+                    isUrgent = false,
+                    isPinned = false,
+                    likes = 45,
+                    dislikes = 1,
+                    commentCount = 5,
+                    timeAgo = "5h ago",
+                    imageUrl = "",
+                    isAdoptionStory = false,
+                    hasImage = true,
+                    localImageRes = R.drawable.cat_midnight,
+                    isLiked = false,
+                    isDisliked = false
+                ),
+                CommunityPost(
+                    id = "5",
+                    authorName = "Whiskers Blog",
+                    authorInitials = "WB",
+                    type = "Blog Post",
+                    title = "How to Cat-Proof Your Modern Home",
+                    content = "Protect your furniture and keep your cat safe with these designer-approved tips.",
+                    isUrgent = false,
+                    isPinned = false,
+                    likes = 120,
+                    dislikes = 3,
+                    commentCount = 18,
+                    timeAgo = "8 min read",
+                    imageUrl = "",
+                    isAdoptionStory = false,
+                    hasImage = true,
+                    localImageRes = R.drawable.cat_proof,
+                    isLiked = false,
+                    isDisliked = false
+                ),
+                CommunityPost(
+                    id = "6",
+                    authorName = "Nutrition Guide",
+                    authorInitials = "NG",
+                    type = "Blog Post",
+                    title = "Decoding the Label: What Your Cat Really Needs",
+                    content = "Learn how to spot high-quality ingredients and avoid common fillers.",
+                    isUrgent = false,
+                    isPinned = false,
+                    likes = 98,
+                    dislikes = 2,
+                    commentCount = 14,
+                    timeAgo = "8 min read",
+                    imageUrl = "",
+                    isAdoptionStory = false,
+                    hasImage = true,
+                    localImageRes = R.drawable.cat_food,
+                    isLiked = false,
+                    isDisliked = false
+                )
             )
         )
     }
@@ -186,6 +198,13 @@ fun CommunityBlogScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onMenuClick) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = "Menu",
+                            tint = KksWhite
+                        )
+                    }
                     IconButton(onClick = { showNewPostDialog = true }) {
                         Icon(
                             Icons.Filled.Add,
@@ -209,21 +228,19 @@ fun CommunityBlogScreen(
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Lost & Found Section
             item {
                 LostFoundSection(
                     onMissingClick = {
-                        alertPost = posts.find { it.id == "3" }
+                        alertPost = postsState.find { it.id == "3" }
                         showAlertDialog = true
                     },
                     onFoundClick = {
-                        alertPost = posts.find { it.id == "4" }
+                        alertPost = postsState.find { it.id == "4" }
                         showAlertDialog = true
                     }
                 )
             }
 
-            // Community Stories Header
             item {
                 Text(
                     "Community Stories",
@@ -234,12 +251,39 @@ fun CommunityBlogScreen(
                 )
             }
 
-            // Posts
-            items(posts) { post ->
+            items(postsState) { post ->
                 when {
                     post.isUrgent -> UrgentPostCard(
                         post = post,
                         onClick = {
+                            selectedPost = post
+                            showPostDetailDialog = true
+                        },
+                        onLike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                    isLiked = !this[index].isLiked,
+                                    isDisliked = false,
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onDislike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                    isDisliked = !this[index].isDisliked,
+                                    isLiked = false,
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onComment = {
                             selectedPost = post
                             showPostDetailDialog = true
                         }
@@ -249,11 +293,67 @@ fun CommunityBlogScreen(
                         onClick = {
                             selectedPost = post
                             showPostDetailDialog = true
+                        },
+                        onLike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                    isLiked = !this[index].isLiked,
+                                    isDisliked = false,
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onDislike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                    isDisliked = !this[index].isDisliked,
+                                    isLiked = false,
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onComment = {
+                            selectedPost = post
+                            showPostDetailDialog = true
                         }
                     )
                     post.hasImage -> BlogPostCard(
                         post = post,
                         onClick = {
+                            selectedPost = post
+                            showPostDetailDialog = true
+                        },
+                        onLike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                    isLiked = !this[index].isLiked,
+                                    isDisliked = false,
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onDislike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                    isDisliked = !this[index].isDisliked,
+                                    isLiked = false,
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onComment = {
                             selectedPost = post
                             showPostDetailDialog = true
                         }
@@ -263,12 +363,39 @@ fun CommunityBlogScreen(
                         onClick = {
                             selectedPost = post
                             showPostDetailDialog = true
+                        },
+                        onLike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                    isLiked = !this[index].isLiked,
+                                    isDisliked = false,
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onDislike = {
+                            val index = postsState.indexOf(post)
+                            postsState = postsState.toMutableList().apply {
+                                val updated = this[index].copy(
+                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                    isDisliked = !this[index].isDisliked,
+                                    isLiked = false,
+                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                )
+                                this[index] = updated
+                            }
+                        },
+                        onComment = {
+                            selectedPost = post
+                            showPostDetailDialog = true
                         }
                     )
                 }
             }
 
-            // Explore All Articles
             item {
                 ExploreAllButton(
                     onClick = { showExploreDialog = true }
@@ -277,46 +404,34 @@ fun CommunityBlogScreen(
         }
     }
 
-    // ========== DIALOGS ==========
-
-    // New Post Dialog
     if (showNewPostDialog) {
         NewPostDialog(
             onDismiss = { showNewPostDialog = false },
             onSubmit = { title, content ->
                 showNewPostDialog = false
-                // In a real app, this would save to Firebase
             }
         )
     }
 
-    // Post Detail Dialog
     if (showPostDetailDialog && selectedPost != null) {
         PostDetailDialog(
             post = selectedPost!!,
             onDismiss = { showPostDetailDialog = false },
-            onLike = {
-                // Handle like
-            },
-            onComment = {
-                // Handle comment
-            }
+            onLike = {},
+            onComment = {}
         )
     }
 
-    // Alert Dialog (Lost/Found)
     if (showAlertDialog && alertPost != null) {
         AlertDetailDialog(
             post = alertPost!!,
             onDismiss = { showAlertDialog = false },
             onContact = {
                 showAlertDialog = false
-                // Show contact info
             }
         )
     }
 
-    // Explore All Dialog
     if (showExploreDialog) {
         ExploreAllDialog(
             onDismiss = { showExploreDialog = false }
@@ -348,7 +463,7 @@ private fun LostFoundSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "📢 Lost & Found",
+                    "Lost & Found",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = KksRed
@@ -367,16 +482,16 @@ private fun LostFoundSection(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Missing Alert - Clickable
+            // Missing Alert
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onMissingClick() },
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFF3E0)
+                    containerColor = KksRed.copy(alpha = 0.08f)
                 ),
-                border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.3f))
+                border = BorderStroke(1.dp, KksRed.copy(alpha = 0.3f))
             ) {
                 Row(
                     modifier = Modifier
@@ -384,14 +499,12 @@ private fun LostFoundSection(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("⚠️", fontSize = 24.sp)
-                    Spacer(modifier = Modifier.width(10.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             "MISSING: OLIVER",
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
-                            color = Color.Red
+                            color = KksRed
                         )
                         Text(
                             "Last seen in Oak Ridge • Reported 2h ago",
@@ -399,26 +512,26 @@ private fun LostFoundSection(
                             color = KksTextSecondary
                         )
                     }
-                    Icon(
-                        Icons.Filled.ChevronRight,
-                        contentDescription = null,
-                        tint = Color.Red
+                    Text(
+                        "→",
+                        fontSize = 16.sp,
+                        color = KksRed
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Found Alert - Clickable
+            // Found Alert
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onFoundClick() },
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFE8F5E9)
+                    containerColor = KksRed.copy(alpha = 0.05f)
                 ),
-                border = BorderStroke(1.dp, Color(0xFF4CAF50).copy(alpha = 0.3f))
+                border = BorderStroke(1.dp, KksRed.copy(alpha = 0.2f))
             ) {
                 Row(
                     modifier = Modifier
@@ -426,14 +539,12 @@ private fun LostFoundSection(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("🐾", fontSize = 24.sp)
-                    Spacer(modifier = Modifier.width(10.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             "FOUND: LUNA",
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
-                            color = Color(0xFF2E7D32)
+                            color = KksRed
                         )
                         Text(
                             "Safe at Sanctuary • Checking for chip...",
@@ -441,10 +552,10 @@ private fun LostFoundSection(
                             color = KksTextSecondary
                         )
                     }
-                    Icon(
-                        Icons.Filled.ChevronRight,
-                        contentDescription = null,
-                        tint = Color(0xFF2E7D32)
+                    Text(
+                        "→",
+                        fontSize = 16.sp,
+                        color = KksRed
                     )
                 }
             }
@@ -455,7 +566,13 @@ private fun LostFoundSection(
 // ========== URGENT POST CARD ==========
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
+private fun UrgentPostCard(
+    post: CommunityPost,
+    onClick: () -> Unit,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onComment: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -464,7 +581,7 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.3f)),
+        border = BorderStroke(1.dp, KksRed.copy(alpha = 0.3f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -480,13 +597,13 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color.Red.copy(alpha = 0.2f)),
+                        .background(KksRed.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         post.authorInitials,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Red,
+                        color = KksRed,
                         fontSize = 14.sp
                     )
                 }
@@ -502,14 +619,14 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
                         Card(
                             shape = RoundedCornerShape(4.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.Red.copy(alpha = 0.15f)
+                                containerColor = KksRed.copy(alpha = 0.15f)
                             )
                         ) {
                             Text(
                                 "URGENT",
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Red,
+                                color = KksRed,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                             )
                         }
@@ -520,34 +637,49 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
                         color = KksTextSecondary
                     )
                 }
-                Icon(
-                    Icons.Filled.MoreVert,
-                    contentDescription = null,
-                    tint = KksTextSecondary
+                Text(
+                    "⋯",
+                    fontSize = 16.sp,
+                    color = KksTextSecondary
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             if (post.localImageRes != null) {
-                Image(
-                    painter = painterResource(id = post.localImageRes),
-                    contentDescription = post.title,
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .height(180.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(KksRed.copy(alpha = 0.1f))
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = post.localImageRes),
+                        contentDescription = post.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .align(Alignment.BottomStart)
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.3f))
+                                )
+                            )
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             Text(
                 post.title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Red
+                color = KksRed
             )
 
             Text(
@@ -560,9 +692,18 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
                 modifier = Modifier.padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            PostActions(post = post)
+            PostActions(
+                likes = post.likes,
+                dislikes = post.dislikes,
+                commentCount = post.commentCount,
+                isLiked = post.isLiked,
+                isDisliked = post.isDisliked,
+                onLike = onLike,
+                onDislike = onDislike,
+                onComment = onComment
+            )
         }
     }
 }
@@ -570,7 +711,13 @@ private fun UrgentPostCard(post: CommunityPost, onClick: () -> Unit) {
 // ========== COMMUNITY POST CARD ==========
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CommunityPostCard(post: CommunityPost, onClick: () -> Unit) {
+private fun CommunityPostCard(
+    post: CommunityPost,
+    onClick: () -> Unit,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onComment: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -637,27 +784,31 @@ private fun CommunityPostCard(post: CommunityPost, onClick: () -> Unit) {
                         }
                     }
                 }
-                Icon(
-                    Icons.Filled.MoreVert,
-                    contentDescription = null,
-                    tint = KksTextSecondary
+                Text(
+                    "⋯",
+                    fontSize = 16.sp,
+                    color = KksTextSecondary
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             if (post.localImageRes != null) {
-                Image(
-                    painter = painterResource(id = post.localImageRes),
-                    contentDescription = post.title,
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(140.dp)
+                        .height(200.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(KksRed.copy(alpha = 0.1f))
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = post.localImageRes),
+                        contentDescription = post.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             Text(
@@ -677,9 +828,18 @@ private fun CommunityPostCard(post: CommunityPost, onClick: () -> Unit) {
                 modifier = Modifier.padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            PostActions(post = post)
+            PostActions(
+                likes = post.likes,
+                dislikes = post.dislikes,
+                commentCount = post.commentCount,
+                isLiked = post.isLiked,
+                isDisliked = post.isDisliked,
+                onLike = onLike,
+                onDislike = onDislike,
+                onComment = onComment
+            )
         }
     }
 }
@@ -687,16 +847,22 @@ private fun CommunityPostCard(post: CommunityPost, onClick: () -> Unit) {
 // ========== ADOPTION STORY CARD ==========
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
+private fun AdoptionStoryCard(
+    post: CommunityPost,
+    onClick: () -> Unit,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onComment: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF8E1)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
-        border = BorderStroke(1.dp, Color(0xFFFFD54F).copy(alpha = 0.5f)),
+        border = BorderStroke(1.dp, KksRed.copy(alpha = 0.2f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -712,10 +878,13 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFFFD54F).copy(alpha = 0.3f)),
+                        .background(KksRed.copy(alpha = 0.15f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("🏠", fontSize = 18.sp)
+                    Text(
+                        "🏠",
+                        fontSize = 18.sp
+                    )
                 }
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(modifier = Modifier.weight(1f)) {
@@ -733,14 +902,14 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
                 Card(
                     shape = RoundedCornerShape(4.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFFFD54F).copy(alpha = 0.5f)
+                        containerColor = KksRed.copy(alpha = 0.15f)
                     )
                 ) {
                     Text(
-                        "❤️ Adoption Story",
+                        "Adoption Story",
                         fontSize = 9.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFE65100),
+                        color = KksRed,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
@@ -749,17 +918,21 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             if (post.localImageRes != null) {
-                Image(
-                    painter = painterResource(id = post.localImageRes),
-                    contentDescription = post.title,
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(140.dp)
+                        .height(200.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFFFD54F).copy(alpha = 0.2f))
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                        .background(KksRed.copy(alpha = 0.1f))
+                ) {
+                    Image(
+                        painter = painterResource(id = post.localImageRes),
+                        contentDescription = post.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             Text(
@@ -771,7 +944,7 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 "#AdoptionSuccess #NewBeginnings",
@@ -780,9 +953,18 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
                 fontWeight = FontWeight.Medium
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            PostActions(post = post)
+            PostActions(
+                likes = post.likes,
+                dislikes = post.dislikes,
+                commentCount = post.commentCount,
+                isLiked = post.isLiked,
+                isDisliked = post.isDisliked,
+                onLike = onLike,
+                onDislike = onDislike,
+                onComment = onComment
+            )
         }
     }
 }
@@ -790,7 +972,13 @@ private fun AdoptionStoryCard(post: CommunityPost, onClick: () -> Unit) {
 // ========== BLOG POST CARD ==========
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BlogPostCard(post: CommunityPost, onClick: () -> Unit) {
+private fun BlogPostCard(
+    post: CommunityPost,
+    onClick: () -> Unit,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onComment: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -818,7 +1006,7 @@ private fun BlogPostCard(post: CommunityPost, onClick: () -> Unit) {
                     )
                 ) {
                     Text(
-                        "📖 BLOG",
+                        "BLOG",
                         fontSize = 9.sp,
                         fontWeight = FontWeight.Bold,
                         color = KksRed,
@@ -836,21 +1024,25 @@ private fun BlogPostCard(post: CommunityPost, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             if (post.localImageRes != null) {
-                Image(
-                    painter = painterResource(id = post.localImageRes),
-                    contentDescription = post.title,
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(140.dp)
+                        .height(200.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(
                             Brush.horizontalGradient(
                                 colors = listOf(KksRed.copy(alpha = 0.2f), KksRed.copy(alpha = 0.05f))
                             )
                         )
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = post.localImageRes),
+                        contentDescription = post.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             Text(
@@ -870,7 +1062,7 @@ private fun BlogPostCard(post: CommunityPost, onClick: () -> Unit) {
                 modifier = Modifier.padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 "Read Full Guide →",
@@ -879,49 +1071,100 @@ private fun BlogPostCard(post: CommunityPost, onClick: () -> Unit) {
                 color = KksRed
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            PostActions(post = post)
+            PostActions(
+                likes = post.likes,
+                dislikes = post.dislikes,
+                commentCount = post.commentCount,
+                isLiked = post.isLiked,
+                isDisliked = post.isDisliked,
+                onLike = onLike,
+                onDislike = onDislike,
+                onComment = onComment
+            )
         }
     }
 }
 
-// ========== POST ACTIONS ==========
+// ========== POST ACTIONS (Text-based, no icons) ==========
 @Composable
-private fun PostActions(post: CommunityPost) {
+private fun PostActions(
+    likes: Int,
+    dislikes: Int,
+    commentCount: Int,
+    isLiked: Boolean,
+    isDisliked: Boolean,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onComment: () -> Unit
+) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Filled.ThumbUp,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = KksRed
+        // Like
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onLike() }
+        ) {
+            Text(
+                "👍",
+                fontSize = 14.sp
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(post.likes.toString(), fontSize = 12.sp)
+            Text(
+                likes.toString(),
+                fontSize = 13.sp,
+                color = if (isLiked) KksRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = if (isLiked) FontWeight.Bold else FontWeight.Normal
+            )
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Filled.ThumbDown,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = KksTextSecondary
+
+        // Dislike
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onDislike() }
+        ) {
+            Text(
+                "👎",
+                fontSize = 14.sp
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(post.dislikes.toString(), fontSize = 12.sp)
+            Text(
+                dislikes.toString(),
+                fontSize = 13.sp,
+                color = if (isDisliked) KksRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = if (isDisliked) FontWeight.Bold else FontWeight.Normal
+            )
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Filled.ChatBubbleOutline,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = KksTextSecondary
+
+        // Comment
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onComment() }
+        ) {
+            Text(
+                "💬",
+                fontSize = 14.sp
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(post.commentCount.toString(), fontSize = 12.sp)
+            Text(
+                commentCount.toString(),
+                fontSize = 13.sp,
+                color = KksRed,
+                fontWeight = FontWeight.Medium
+            )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Share
+        Text(
+            "🔗",
+            fontSize = 14.sp,
+            modifier = Modifier.clickable { /* Share */ }
+        )
     }
 }
 
@@ -946,16 +1189,16 @@ private fun ExploreAllButton(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "📚 Explore All Articles",
+                "Explore All Articles",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = KksRed
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                Icons.Filled.ArrowForward,
-                contentDescription = null,
-                tint = KksRed
+            Text(
+                "→",
+                fontSize = 16.sp,
+                color = KksRed
             )
         }
     }
@@ -998,7 +1241,6 @@ private fun NewPostDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Post Type Dropdown
                 var expanded by remember { mutableStateOf(false) }
                 ExposedDropdownMenuBox(
                     expanded = expanded,
@@ -1122,7 +1364,6 @@ private fun PostDetailDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(20.dp)
             ) {
-                // Header with close
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -1134,18 +1375,16 @@ private fun PostDetailDialog(
                         fontWeight = FontWeight.Bold,
                         color = KksRed
                     )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = "Close",
-                            tint = KksTextSecondary
-                        )
-                    }
+                    Text(
+                        "✕",
+                        fontSize = 20.sp,
+                        color = KksTextSecondary,
+                        modifier = Modifier.clickable { onDismiss() }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Author
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -1178,22 +1417,24 @@ private fun PostDetailDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Image if available
                 if (post.localImageRes != null) {
-                    Image(
-                        painter = painterResource(id = post.localImageRes),
-                        contentDescription = post.title,
-                        contentScale = ContentScale.Crop,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(KksRed.copy(alpha = 0.1f))
-                    )
+                    ) {
+                        Image(
+                            painter = painterResource(id = post.localImageRes),
+                            contentDescription = post.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                // Content
                 Text(
                     post.title,
                     fontSize = 18.sp,
@@ -1212,7 +1453,6 @@ private fun PostDetailDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Actions
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(24.dp)
@@ -1221,33 +1461,21 @@ private fun PostDetailDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable { onLike() }
                     ) {
-                        Icon(
-                            Icons.Filled.ThumbUp,
-                            contentDescription = null,
-                            tint = KksRed
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("👍", fontSize = 14.sp)
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(post.likes.toString(), fontSize = 14.sp)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Filled.ThumbDown,
-                            contentDescription = null,
-                            tint = KksTextSecondary
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("👎", fontSize = 14.sp)
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(post.dislikes.toString(), fontSize = 14.sp)
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable { onComment() }
                     ) {
-                        Icon(
-                            Icons.Filled.ChatBubbleOutline,
-                            contentDescription = null,
-                            tint = KksRed
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("💬", fontSize = 14.sp)
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(post.commentCount.toString(), fontSize = 14.sp)
                     }
                 }
@@ -1299,33 +1527,36 @@ private fun AlertDetailDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        if (post.title.contains("MISSING")) "⚠️ Missing Cat Alert" else "🐾 Found Cat Alert",
+                        if (post.title.contains("MISSING")) "Missing Cat Alert" else "Found Cat Alert",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (post.title.contains("MISSING")) Color.Red else Color(0xFF2E7D32)
+                        color = KksRed
                     )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = "Close",
-                            tint = KksTextSecondary
-                        )
-                    }
+                    Text(
+                        "✕",
+                        fontSize = 20.sp,
+                        color = KksTextSecondary,
+                        modifier = Modifier.clickable { onDismiss() }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 if (post.localImageRes != null) {
-                    Image(
-                        painter = painterResource(id = post.localImageRes),
-                        contentDescription = post.title,
-                        contentScale = ContentScale.Crop,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(160.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(KksRed.copy(alpha = 0.1f))
-                    )
+                    ) {
+                        Image(
+                            painter = painterResource(id = post.localImageRes),
+                            contentDescription = post.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
@@ -1363,7 +1594,7 @@ private fun AlertDetailDialog(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (post.title.contains("MISSING")) Color.Red else Color(0xFF2E7D32)
+                            containerColor = KksRed
                         )
                     ) {
                         Text(
@@ -1403,23 +1634,21 @@ private fun ExploreAllDialog(onDismiss: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "📚 All Articles",
+                        "All Articles",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = KksRed
                     )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = "Close",
-                            tint = KksTextSecondary
-                        )
-                    }
+                    Text(
+                        "✕",
+                        fontSize = 20.sp,
+                        color = KksTextSecondary,
+                        modifier = Modifier.clickable { onDismiss() }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Sample blog articles
                 listOf(
                     "How to Cat-Proof Your Modern Home" to "5 min read",
                     "Decoding the Label: What Your Cat Really Needs" to "8 min read",
@@ -1455,11 +1684,10 @@ private fun ExploreAllDialog(onDismiss: () -> Unit) {
                                 fontSize = 11.sp,
                                 color = KksTextSecondary
                             )
-                            Icon(
-                                Icons.Filled.ArrowForward,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = KksRed
+                            Text(
+                                "→",
+                                fontSize = 14.sp,
+                                color = KksRed
                             )
                         }
                     }
@@ -1492,12 +1720,14 @@ data class CommunityPost(
     val content: String = "",
     val isUrgent: Boolean = false,
     val isPinned: Boolean = false,
-    val likes: Int = 0,
-    val dislikes: Int = 0,
-    val commentCount: Int = 0,
+    var likes: Int = 0,
+    var dislikes: Int = 0,
+    var commentCount: Int = 0,
     val timeAgo: String = "",
     val imageUrl: String = "",
     val isAdoptionStory: Boolean = false,
     val hasImage: Boolean = false,
-    val localImageRes: Int? = null
+    val localImageRes: Int? = null,
+    var isLiked: Boolean = false,
+    var isDisliked: Boolean = false
 )
