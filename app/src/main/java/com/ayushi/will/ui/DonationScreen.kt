@@ -82,7 +82,8 @@ private val donationItems = listOf(
 )
 @Composable
 fun DonationScreen(
-    onBackToHome: () -> Unit = {}
+    onBackToHome: () -> Unit = {},
+    onMenuClick: () -> Unit = {}
 ) {
     var selectedAmount by remember { mutableStateOf<String?>("R100") }
     var isCustomSelected by remember { mutableStateOf(false) }

@@ -48,7 +48,9 @@ fun ProfileScreen(
     onDonationHistoryClick: () -> Unit = {},
     onHelpClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
-    onLogout: () -> Unit = {}
+    onLogout: () -> Unit = {},
+    onMenuClick: () -> Unit = {},
+    onBack: () -> Unit = {}
 ) {
     var showLogoutConfirm by remember { mutableStateOf(false) }
 

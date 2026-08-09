@@ -63,7 +63,9 @@ private val sampleReminders = listOf(
 
 @Composable
 fun RemindersScreen(
-    onDismissReminder: (String) -> Unit = {}
+    onDismissReminder: (String) -> Unit = {},
+    onMenuClick: () -> Unit = {},
+    onBack: () -> Unit = {}
 ) {
     val reminders = remember { mutableStateListOf(*sampleReminders.toTypedArray()) }
 
