@@ -155,11 +155,7 @@ fun AppNavHost() {
             // ========== MERCHANDISE SCREEN ==========
             composable("merchandise") {
                 currentRoute = "merchandise"
-                MerchandiseScreen(
-                    onBack = { navController.popBackStack() },
-                    onAddToCart = { /* Handle add to cart */ },
-                    onMenuClick = { drawerOpen = true }
-                )
+                MerchandiseScreen()
             }
 
             // ========== COMMUNITY BLOG SCREEN ==========
