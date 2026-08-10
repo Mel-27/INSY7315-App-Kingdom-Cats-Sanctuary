@@ -9,10 +9,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -44,20 +42,6 @@ private val sampleReminders = listOf(
         title = "Viewing scheduled",
         description = "Your booked session with Whiskers is coming up.",
         dateTime = "Tomorrow, 10:00 AM"
-    ),
-    ReminderItem(
-        id = "r2",
-        icon = Icons.Filled.Celebration,
-        title = "Event RSVP confirmed",
-        description = "You're going to Nip, Sip & Paint - International Cats Day.",
-        dateTime = "Sat, 8 August • 10:30 AM"
-    ),
-    ReminderItem(
-        id = "r3",
-        icon = Icons.Filled.VolunteerActivism,
-        title = "Donation receipt",
-        description = "Thank you! Your R100 donation receipt was emailed to you.",
-        dateTime = "2 days ago"
     )
 )
 
@@ -174,7 +158,7 @@ private fun EmptyRemindersState() {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "No reminders right now - booked viewings, event RSVPs, and donation receipts will show up here.",
+            text = "No reminders right now - your booked viewing sessions will show up here.",
             fontSize = 13.sp,
             color = KksTextSecondary,
             textAlign = TextAlign.Center

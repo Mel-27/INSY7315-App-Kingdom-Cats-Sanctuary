@@ -11,12 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +35,9 @@ import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
 
+private val languageOptions = listOf("English", "Afrikaans", "Zulu")
+private val currencyOptions = listOf("ZAR (R)", "USD ($)", "EUR (€)")
+
 @Composable
 fun ProfileScreen(
     userName: String = "Tiara N.",
@@ -44,15 +45,14 @@ fun ProfileScreen(
     isDarkMode: Boolean = false,
     onToggleDarkMode: (Boolean) -> Unit = {},
     onEditProfile: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {},
-    onDonationHistoryClick: () -> Unit = {},
-    onHelpClick: () -> Unit = {},
-    onAboutClick: () -> Unit = {},
     onLogout: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
     onBack: () -> Unit = {}
 ) {
     var showLogoutConfirm by remember { mutableStateOf(false) }
+    var selectedLanguage by remember { mutableStateOf(languageOptions.first()) }
+    var selectedCurrency by remember { mutableStateOf(currencyOptions.first()) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
+    var showCurrencyDialog by remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
@@ -88,38 +88,23 @@ fun ProfileScreen(
                     onCheckedChange = onToggleDarkMode
                 )
                 SettingsDivider()
-                SettingsRow(
-                    icon = Icons.Filled.Notifications,
-                    label = "Notifications",
-                    onClick = onNotificationsClick
+                SettingsValueRow(
+                    icon = Icons.Filled.Language,
+                    label = "Language",
+                    value = selectedLanguage,
+                    onClick = { showLanguageDialog = true }
+                )
+                SettingsDivider()
+                SettingsValueRow(
+                    icon = Icons.Filled.CurrencyExchange,
+                    label = "Currency",
+                    value = selectedCurrency,
+                    onClick = { showCurrencyDialog = true }
                 )
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            SettingsSectionLabel("ACCOUNT")
-            Spacer(modifier = Modifier.height(10.dp))
-            SettingsCard {
-                SettingsRow(
-                    icon = Icons.Filled.CardGiftcard,
-                    label = "Donation History",
-                    onClick = onDonationHistoryClick
-                )
-                SettingsDivider()
-                SettingsRow(
-                    icon = Icons.Filled.HelpOutline,
-                    label = "Help & Support",
-                    onClick = onHelpClick
-                )
-                SettingsDivider()
-                SettingsRow(
-                    icon = Icons.Filled.Info,
-                    label = "About Kingdom Cats",
-                    onClick = onAboutClick
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedButton(
                 onClick = { showLogoutConfirm = true },
@@ -148,7 +133,34 @@ fun ProfileScreen(
             onDismiss = { showLogoutConfirm = false }
         )
     }
+
+    if (showLanguageDialog) {
+        SelectionDialog(
+            title = "Choose language",
+            options = languageOptions,
+            selected = selectedLanguage,
+            onSelect = {
+                selectedLanguage = it
+                showLanguageDialog = false
+            },
+            onDismiss = { showLanguageDialog = false }
+        )
+    }
+
+    if (showCurrencyDialog) {
+        SelectionDialog(
+            title = "Choose currency",
+            options = currencyOptions,
+            selected = selectedCurrency,
+            onSelect = {
+                selectedCurrency = it
+                showCurrencyDialog = false
+            },
+            onDismiss = { showCurrencyDialog = false }
+        )
+    }
 }
+
 
 @Composable
 private fun ProfileHeader(
@@ -215,9 +227,10 @@ private fun SettingsDivider() {
 }
 
 @Composable
-private fun SettingsRow(
+private fun SettingsValueRow(
     icon: ImageVector,
     label: String,
+    value: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -230,6 +243,8 @@ private fun SettingsRow(
         Icon(icon, contentDescription = null, tint = KksTextSecondary, modifier = Modifier.size(20.dp))
         Spacer(modifier = Modifier.width(14.dp))
         Text(text = label, fontSize = 14.sp, modifier = Modifier.weight(1f))
+        Text(text = value, fontSize = 13.sp, color = KksTextSecondary)
+        Spacer(modifier = Modifier.width(6.dp))
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
@@ -263,6 +278,46 @@ private fun SettingsToggleRow(
                 checkedThumbColor = Color.White
             )
         )
+    }
+}
+
+@Composable
+private fun SelectionDialog(
+    title: String,
+    options: List<String>,
+    selected: String,
+    onSelect: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(12.dp))
+                options.forEach { option ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(option) }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = option == selected,
+                            onClick = { onSelect(option) },
+                            colors = RadioButtonDefaults.colors(selectedColor = KksRed)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = option, fontSize = 14.sp)
+                    }
+                }
+            }
+        }
     }
 }
 
