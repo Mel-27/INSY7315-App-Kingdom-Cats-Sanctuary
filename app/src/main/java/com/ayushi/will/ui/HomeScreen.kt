@@ -70,6 +70,9 @@ fun HomeScreen(
     // Navigation Drawer State
     var drawerOpen by remember { mutableStateOf(false) }
 
+    // Review state - show all reviews or just one
+    var showAllReviews by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         CatRepository.observeCats { cats = it }
         CatRepository.observeFounders { founders = it }
@@ -87,7 +90,7 @@ fun HomeScreen(
         ) {
             item {
                 HeroSection(
-                    onMenuClick = onMenuClick,  // ← Pass to global menu
+                    onMenuClick = onMenuClick,
                     onBookSessionClick = onBookSessionClick,
                     onMeetCatsClick = onMeetCatsClick,
                     onDonateClick = onDonateClick,
@@ -121,6 +124,7 @@ fun HomeScreen(
                 FoundersSection(founders = founders)
             }
 
+            // ========== UPDATED: HOW YOU CAN HELP ==========
             item {
                 HowYouCanHelpSection(
                     onDonateClick = onDonateClick,
@@ -129,8 +133,13 @@ fun HomeScreen(
                 )
             }
 
+            // ========== UPDATED: REVIEWS SECTION ==========
             item {
-                ReviewsSection(reviews = reviews)
+                ReviewsSection(
+                    reviews = reviews,
+                    showAllReviews = showAllReviews,
+                    onToggleShowAll = { showAllReviews = !showAllReviews }
+                )
             }
 
             item {
@@ -819,7 +828,7 @@ private fun FounderCard(founder: Founder) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Founder Image - Now supports local images!
+            // Founder Image
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -827,7 +836,6 @@ private fun FounderCard(founder: Founder) {
                     .background(KksRed.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
-                // CHECK: Use local image first, then URL, then fallback
                 if (founder.localImageRes != null) {
                     Image(
                         painter = painterResource(id = founder.localImageRes),
@@ -847,7 +855,6 @@ private fun FounderCard(founder: Founder) {
                             .clip(CircleShape)
                     )
                 } else {
-                    // Fallback: Person icon
                     Icon(
                         Icons.Filled.Person,
                         contentDescription = null,
@@ -880,13 +887,14 @@ private fun FounderCard(founder: Founder) {
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                maxLines = 2
             )
         }
     }
 }
 
-// ========== 7. HOW YOU CAN HELP ==========
+// ========== 7. HOW YOU CAN HELP (UPDATED) ==========
 @Composable
 private fun HowYouCanHelpSection(
     onDonateClick: () -> Unit,
@@ -900,37 +908,47 @@ private fun HowYouCanHelpSection(
     ) {
         SectionHeader(
             title = "How you can help",
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Row(
+        // Donate Card
+        HelpCard(
+            icon = Icons.Filled.VolunteerActivism,
+            title = "Donate",
+            description = "Give toward food, medical care, or a specific fundraiser.",
+            onClick = onDonateClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            HelpCard(
-                icon = Icons.Filled.VolunteerActivism,
-                title = "Donate",
-                description = "Give toward food, medical care, or a specific fundraiser.",
-                onClick = onDonateClick,
-                modifier = Modifier.weight(1f)
-            )
-            HelpCard(
-                icon = Icons.Filled.CalendarMonth,
-                title = "Book a session",
-                description = "Spend time with our kittens through a private session.",
-                onClick = onBookSessionClick,
-                modifier = Modifier.weight(1f)
-            )
-            HelpCard(
-                icon = Icons.Filled.Favorite,
-                title = "Adopt",
-                description = "Give one of our residents a forever home.",
-                onClick = onBookSessionClick,
-                modifier = Modifier.weight(1f)
-            )
-        }
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            cardColor = KksRed.copy(alpha = 0.12f),
+            iconColor = KksRed
+        )
+
+        // Book a Session Card
+        HelpCard(
+            icon = Icons.Filled.CalendarMonth,
+            title = "Book a session",
+            description = "Spend time with our kittens through a private therapy session.",
+            onClick = onBookSessionClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            cardColor = KksRed.copy(alpha = 0.08f),
+            iconColor = KksRed
+        )
+
+        // Adopt Card
+        HelpCard(
+            icon = Icons.Filled.Favorite,
+            title = "Adopt",
+            description = "Give one of our residents a forever home.",
+            onClick = onBookSessionClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            cardColor = KksRed.copy(alpha = 0.05f),
+            iconColor = KksRed
+        )
     }
 }
 
@@ -940,52 +958,79 @@ private fun HelpCard(
     title: String,
     description: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColor: Color = KksRed.copy(alpha = 0.08f),
+    iconColor: Color = KksRed
 ) {
     Card(
         modifier = modifier
-            .height(140.dp)
+            .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = cardColor
         ),
-        border = BorderStroke(1.dp, KksCardStroke)
+        border = BorderStroke(1.dp, KksRed.copy(alpha = 0.15f))
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            // Icon
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(iconColor.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = iconColor
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Text content
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    description,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2
+                )
+            }
+
+            // Arrow
             Icon(
-                icon,
+                Icons.Filled.ChevronRight,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp),
-                tint = KksRed
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                description,
-                fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                maxLines = 2
+                tint = iconColor
             )
         }
     }
 }
 
-// ========== 8. REVIEWS SECTION ==========
+// ========== 8. REVIEWS SECTION (UPDATED) ==========
 @Composable
-private fun ReviewsSection(reviews: List<Review>) {
+private fun ReviewsSection(
+    reviews: List<Review>,
+    showAllReviews: Boolean,
+    onToggleShowAll: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -1005,23 +1050,48 @@ private fun ReviewsSection(reviews: List<Review>) {
             return
         }
 
-        LazyRow(
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        // Show first review or all reviews
+        val displayReviews = if (showAllReviews) reviews else reviews.take(1)
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-            items(reviews.take(3)) { review ->
-                ReviewCardCompact(review = review)
+            displayReviews.forEach { review ->
+                ReviewCard(review = review, modifier = Modifier.padding(vertical = 6.dp))
+            }
+
+            // See More / See Less button
+            if (reviews.size > 1) {
+                TextButton(
+                    onClick = onToggleShowAll,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        if (showAllReviews) "See Less" else "See More Reviews",
+                        color = KksRed,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        if (showAllReviews) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = null,
+                        tint = KksRed,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ReviewCardCompact(review: Review) {
+private fun ReviewCard(review: Review, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
-            .width(280.dp)
-            .padding(vertical = 4.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -1029,31 +1099,59 @@ private fun ReviewCardCompact(review: Review) {
         border = BorderStroke(1.dp, KksCardStroke)
     ) {
         Column(
-            modifier = Modifier.padding(14.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
-            Row {
-                repeat(5) { index ->
-                    Icon(
-                        imageVector = if (index < review.rating) Icons.Filled.Star else Icons.Filled.StarBorder,
-                        contentDescription = null,
-                        tint = KksStar,
-                        modifier = Modifier.size(16.dp)
+            // Name and Rating
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Avatar
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(KksRed.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        review.authorName.take(2).uppercase(),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        color = KksRed
                     )
                 }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Text(
+                    review.authorName,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    modifier = Modifier.weight(1f)
+                )
+
+                // Star rating
+                Row {
+                    repeat(5) { index ->
+                        Icon(
+                            imageVector = if (index < review.rating) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            contentDescription = null,
+                            tint = KksStar,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(6.dp))
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Comment
             Text(
                 "\"${review.comment}\"",
-                fontSize = 13.sp,
-                lineHeight = 18.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 3
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                "— ${review.authorName}",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
