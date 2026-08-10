@@ -41,8 +41,8 @@ private val currencyOptions = listOf("ZAR (R)", "USD ($)", "EUR (€)")
 
 @Composable
 fun ProfileScreen(
-    userName: String = "Tiara N.",
-    userEmail: String = "tiara@gmail.com",
+    userName: String = "Jane D.",
+    userEmail: String = "jane@gmail.com",
     isDarkMode: Boolean = false,
     onToggleDarkMode: (Boolean) -> Unit = {},
     onEditProfile: () -> Unit = {},

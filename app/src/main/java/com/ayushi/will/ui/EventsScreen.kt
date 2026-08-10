@@ -12,6 +12,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
@@ -66,8 +71,28 @@ private val sanctuaryEvents = listOf(
         location = "37 Jeanne Howes Place, Crestholme",
         cause = "Cause: Sanctuary Fundraiser",
         imageRes = R.drawable.event_spring_purrathon
+    ),
+
+    SanctuaryEvent(
+        title = "Picnic with the Kitties",
+        dateTime = "Saturday, 5 September 2026 • 11:00 AM – 2:00 PM",
+        description = "Bring your picnic and blanket and chill under the trees with the kitties. A relaxed afternoon outdoors with our resident cats roaming nearby - snacks, sunshine, and plenty of purrs.",
+        location = "Kingdom Cats Sanctuary",
+        cause = "Cause: Sanctuary Fundraiser",
+        price = "R50,00",
+        imageRes = R.drawable.event_picnic_kitties
+    ),
+    SanctuaryEvent(
+        title = "Open Day",
+        dateTime = "Sunday, 4 October 2026 • 9:00 AM – 1:00 PM",
+        description = "Open day in the sanctuary to meet the kitties. Bring your picnic basket and relax in the tranquil surrounds. Tour the grounds, meet the founders, and see our rescues up close - free entry, donations welcome.",
+        location = "Kingdom Cats Sanctuary",
+        cause = "Cause: Community Awareness",
+        imageRes = R.drawable.event_open_day
     )
 )
+
+private const val INITIAL_EVENT_COUNT = 3
 
 @Composable
 fun EventsScreen(
@@ -75,13 +100,16 @@ fun EventsScreen(
     onRsvp: (String) -> Unit = {},
     onMenuClick: () -> Unit = {}
 ) {
+    var showAllEvents by remember { mutableStateOf(false) }
+    val visibleEvents = if (showAllEvents) sanctuaryEvents else sanctuaryEvents.take(INITIAL_EVENT_COUNT)
+    val hasMoreEvents = sanctuaryEvents.size > INITIAL_EVENT_COUNT
+
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // ========== TOP BAR - NO RED BACKGROUND, NO BACK BUTTON ==========
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,7 +123,6 @@ fun EventsScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                // Menu Icon - calls global navigation drawer
                 IconButton(onClick = onMenuClick) {
                     Icon(
                         Icons.Filled.Menu,
@@ -121,9 +148,24 @@ fun EventsScreen(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                sanctuaryEvents.forEach { event ->
+                visibleEvents.forEach { event ->
                     EventCard(event = event, onRsvp = { onRsvp(event.title) })
                 }
+            }
+
+            if (hasMoreEvents) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = if (showAllEvents) "See Less" else "See More",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = KksRed,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showAllEvents = !showAllEvents }
+                        .padding(vertical = 8.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
