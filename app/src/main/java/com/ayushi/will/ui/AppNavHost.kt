@@ -192,7 +192,6 @@ fun AppNavHost() {
                             popUpTo("home") { inclusive = true }
                         }
                     },
-                    onMenuClick = { drawerOpen = true },
                     onBack = { navController.popBackStack() }
                 )
             }
