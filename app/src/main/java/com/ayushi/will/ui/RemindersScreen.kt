@@ -183,3 +183,31 @@ private fun EmptyRemindersState() {
         )
     }
 }
+
+/*
+References:
+
+Android Developers (2026) Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Compose layout basics — Row, Column, Box, Card, Surface.
+Available at: https://developer.android.com/jetpack/compose/layouts/basics
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Material Design 3 in Compose.
+Available at: https://developer.android.com/jetpack/compose/designsystems/material3
+(Accessed: 10 August 2026).
+
+Android Developers (2026) State and Jetpack Compose — mutableStateListOf.
+Available at: https://developer.android.com/jetpack/compose/state
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Lists and grids in Compose — LazyColumn.
+Available at: https://developer.android.com/jetpack/compose/lists
+(Accessed: 10 August 2026).
+
+Google (2026) Material Symbols and Icons.
+Available at: https://fonts.google.com/icons
+(Accessed: 10 August 2026).
+ */
