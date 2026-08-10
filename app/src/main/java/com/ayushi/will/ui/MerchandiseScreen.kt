@@ -3,6 +3,7 @@ package com.ayushi.will.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -43,6 +44,14 @@ fun MerchandiseScreen(
                     }
                 },
                 actions = {
+                    // Menu Button
+                    IconButton(onClick = onMenuClick) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = "Menu",
+                            tint = KksWhite
+                        )
+                    }
                     IconButton(onClick = { /* Navigate to cart */ }) {
                         Icon(
                             Icons.Filled.ShoppingCart,
