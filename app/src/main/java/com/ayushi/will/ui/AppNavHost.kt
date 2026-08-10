@@ -127,9 +127,7 @@ fun AppNavHost() {
             composable("cat_profile") {
                 currentRoute = "adopt"
                 CatProfileScreen(
-                    onBookViewingClick = { navController.navigate("book_session") },
-                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
-                    onBack = { navController.popBackStack() }  // ← Pass the back callback
+                    onBookViewingClick = { navController.navigate("book_session") }
                 )
             }
 
@@ -138,12 +136,12 @@ fun AppNavHost() {
                 currentRoute = "events"
                 EventsScreen(
                     onViewCalendar = { /* Handle calendar view */ },
-                    onRsvp = { eventTitle -> /* Handle RSVP */ },
-                    onMenuClick = { drawerOpen = true },
-                    onBack = { navController.popBackStack() }
+                    onRsvp = { eventTitle ->
+                        // Handle RSVP
+                    },
+                    onMenuClick = { drawerOpen = true }
                 )
             }
-
 
             // ========== DONATION SCREEN ==========
             composable("donation") {
@@ -180,8 +178,8 @@ fun AppNavHost() {
                 currentRoute = "reminders"
                 RemindersScreen(
                     onDismissReminder = { /* Handle dismiss */ },
-                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
-                    onBack = { navController.popBackStack() }  // ← Pass the back callback
+                    onMenuClick = { drawerOpen = true },
+                    onBack = { navController.popBackStack() }
                 )
             }
 
@@ -194,8 +192,7 @@ fun AppNavHost() {
                             popUpTo("home") { inclusive = true }
                         }
                     },
-                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
-                    onBack = { navController.popBackStack() }  // ← Pass the back callback
+                    onBack = { navController.popBackStack() }
                 )
             }
         }
