@@ -21,7 +21,6 @@ import androidx.compose.foundation.border
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.Alignment
@@ -38,7 +37,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.text.TextStyle
-import com.ayushi.will.ui.theme.KksWhite
 
 private val amountOptions = listOf("R50", "R100", "R250", "R500")
 
@@ -85,7 +83,6 @@ private val donationItems = listOf(
     )
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DonationScreen(
     onBackToHome: () -> Unit = {},
@@ -99,58 +96,37 @@ fun DonationScreen(
     var email by remember { mutableStateOf("red@gmail.com") }
     var showConfirmation by remember { mutableStateOf(false) }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Donate",
-                        color = KksWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackToHome) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                actions = {
-                    // Menu Button
-                    IconButton(onClick = onMenuClick) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Menu",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = KksRed
-                ),
-                modifier = Modifier.height(64.dp)
-            )
-        }
-    ) { padding ->
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(padding)
                 .padding(20.dp)
         ) {
-            Text(
-                text = "Support the Sanctuary",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            // ========== TOP BAR - NO RED BACKGROUND, NO BACK BUTTON ==========
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Support the Sanctuary",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "Every donation helps feed, shelter, and care for our cats until they find their forever homes. Choose whichever payment method suits you best.",
                 fontSize = 13.sp,

@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
-import com.ayushi.will.ui.theme.KksWhite
 
 private data class ReminderItem(
     val id: String,
@@ -48,65 +46,40 @@ private val sampleReminders = listOf(
     )
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemindersScreen(
     onDismissReminder: (String) -> Unit = {},
-    onMenuClick: () -> Unit = {},
-    onBack: () -> Unit = {}
+    onMenuClick: () -> Unit = {}
 ) {
     val reminders = remember { mutableStateListOf(*sampleReminders.toTypedArray()) }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Reminders",
-                        color = KksWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                actions = {
-                    // Menu Button
-                    IconButton(onClick = onMenuClick) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Menu",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = KksRed
-                ),
-                modifier = Modifier.height(64.dp)
-            )
-        }
-    ) { padding ->
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
         ) {
-            Text(
-                text = "Reminders",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(20.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Reminders",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
 
             if (reminders.isEmpty()) {
                 EmptyRemindersState()

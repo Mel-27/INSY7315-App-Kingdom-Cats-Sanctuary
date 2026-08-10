@@ -31,6 +31,8 @@ import com.ayushi.will.R
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 
 private data class MerchItem(
     val category: String,
@@ -57,26 +59,44 @@ private val merchItems = listOf(
 )
 
 @Composable
-fun MerchandiseScreen() {
+fun MerchandiseScreen(
+    onMenuClick: () -> Unit = {}
+) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            // ========== TOP BAR - NO RED BACKGROUND ==========
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Kingdom Cats Merch",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Every purchase directly supports the food, medical care, and shelter of our sanctuary residents. Wear it, sip from it, or carry it - it all helps.",
-                    fontSize = 12.sp,
-                    color = KksTextSecondary
-                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
+            Text(
+                text = "Every purchase directly supports the food, medical care, and shelter of our sanctuary residents. Wear it, sip from it, or carry it - it all helps.",
+                fontSize = 12.sp,
+                color = KksTextSecondary,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+
             LazyColumn(
-                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(merchItems) { item ->

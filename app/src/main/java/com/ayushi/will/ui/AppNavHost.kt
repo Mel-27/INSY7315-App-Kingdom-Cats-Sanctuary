@@ -99,7 +99,6 @@ fun AppNavHost() {
             // ========== HOME SCREEN ==========
             composable("home") {
                 currentRoute = "home"
-                // FIXED: Removed extra comma and added all required parameters
                 HomeScreen(
                     onMenuClick = { drawerOpen = true },
                     onCatClick = { /* handled in HomeScreen */ },
@@ -127,7 +126,8 @@ fun AppNavHost() {
             composable("cat_profile") {
                 currentRoute = "adopt"
                 CatProfileScreen(
-                    onBookViewingClick = { navController.navigate("book_session") }
+                    onBookViewingClick = { navController.navigate("book_session") },
+                    onMenuClick = { drawerOpen = true }
                 )
             }
 
@@ -155,14 +155,15 @@ fun AppNavHost() {
             // ========== MERCHANDISE SCREEN ==========
             composable("merchandise") {
                 currentRoute = "merchandise"
-                MerchandiseScreen()
+                MerchandiseScreen(
+                    onMenuClick = { drawerOpen = true }
+                )
             }
 
             // ========== COMMUNITY BLOG SCREEN ==========
             composable("community") {
                 currentRoute = "community"
                 CommunityBlogScreen(
-                    onBack = { navController.popBackStack() },
                     onNewPost = { /* Handle new post */ },
                     onPostClick = { /* Handle post click */ },
                     onMenuClick = { drawerOpen = true }
@@ -174,8 +175,7 @@ fun AppNavHost() {
                 currentRoute = "reminders"
                 RemindersScreen(
                     onDismissReminder = { /* Handle dismiss */ },
-                    onMenuClick = { drawerOpen = true },
-                    onBack = { navController.popBackStack() }
+                    onMenuClick = { drawerOpen = true }
                 )
             }
 
@@ -188,7 +188,7 @@ fun AppNavHost() {
                             popUpTo("home") { inclusive = true }
                         }
                     },
-                    onBack = { navController.popBackStack() }
+                    onMenuClick = { drawerOpen = true }
                 )
             }
         }
