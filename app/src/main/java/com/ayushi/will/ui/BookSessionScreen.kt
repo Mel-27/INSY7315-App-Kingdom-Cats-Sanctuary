@@ -16,7 +16,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Menu
@@ -48,7 +47,6 @@ private val timeSlots = listOf(
     TimeSlot("Golden Hour Purrs", "01:00 PM - 01:45 PM")
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookSessionScreen(
     onBackToHome: () -> Unit = {},
@@ -60,58 +58,37 @@ fun BookSessionScreen(
     var email by remember { mutableStateOf("red@gmail.com") }
     var showConfirmation by remember { mutableStateOf(false) }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Book a Session",
-                        color = KksWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackToHome) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                actions = {
-                    // Menu Button
-                    IconButton(onClick = onMenuClick) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Menu",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = KksRed
-                ),
-                modifier = Modifier.height(64.dp)
-            )
-        }
-    ) { padding ->
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(padding)
                 .padding(20.dp)
         ) {
-            Text(
-                text = "Kitten Petting Sessions",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            // ========== TOP BAR - NO RED BACKGROUND, NO BACK BUTTON ==========
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Book a Session",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "Experience the healing power of purrs. Book a private or group session with our sanctuary residents.",
                 fontSize = 13.sp,

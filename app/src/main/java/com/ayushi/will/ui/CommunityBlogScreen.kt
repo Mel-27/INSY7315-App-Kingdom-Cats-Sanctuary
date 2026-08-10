@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,10 +33,8 @@ import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
 import com.ayushi.will.ui.theme.KksWhite
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommunityBlogScreen(
-    onBack: () -> Unit,
     onNewPost: () -> Unit,
     onPostClick: (CommunityPost) -> Unit,
     onMenuClick: () -> Unit
@@ -176,230 +173,224 @@ fun CommunityBlogScreen(
         )
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Community",
-                        color = KksWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onMenuClick) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Menu",
-                            tint = KksWhite
-                        )
-                    }
+    Surface(color = MaterialTheme.colorScheme.background) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // ========== TOP BAR - NO RED BACKGROUND, NO BACK BUTTON ==========
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Community",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Row {
+                    // New Post Button
                     IconButton(onClick = { showNewPostDialog = true }) {
                         Icon(
                             Icons.Filled.Add,
                             contentDescription = "New Post",
-                            tint = KksWhite
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = KksRed
-                ),
-                modifier = Modifier.height(64.dp)
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                LostFoundSection(
-                    onMissingClick = {
-                        alertPost = postsState.find { it.id == "3" }
-                        showAlertDialog = true
-                    },
-                    onFoundClick = {
-                        alertPost = postsState.find { it.id == "4" }
-                        showAlertDialog = true
+                    // Menu Icon - calls global navigation drawer
+                    IconButton(onClick = onMenuClick) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = "Menu",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
-                )
-            }
-
-            item {
-                Text(
-                    "Community Stories",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-                )
-            }
-
-            items(postsState) { post ->
-                when {
-                    post.isUrgent -> UrgentPostCard(
-                        post = post,
-                        onClick = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        },
-                        onLike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
-                                    isLiked = !this[index].isLiked,
-                                    isDisliked = false,
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onDislike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
-                                    isDisliked = !this[index].isDisliked,
-                                    isLiked = false,
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onComment = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        }
-                    )
-                    post.isAdoptionStory -> AdoptionStoryCard(
-                        post = post,
-                        onClick = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        },
-                        onLike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
-                                    isLiked = !this[index].isLiked,
-                                    isDisliked = false,
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onDislike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
-                                    isDisliked = !this[index].isDisliked,
-                                    isLiked = false,
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onComment = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        }
-                    )
-                    post.hasImage -> BlogPostCard(
-                        post = post,
-                        onClick = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        },
-                        onLike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
-                                    isLiked = !this[index].isLiked,
-                                    isDisliked = false,
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onDislike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
-                                    isDisliked = !this[index].isDisliked,
-                                    isLiked = false,
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onComment = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        }
-                    )
-                    else -> CommunityPostCard(
-                        post = post,
-                        onClick = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        },
-                        onLike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
-                                    isLiked = !this[index].isLiked,
-                                    isDisliked = false,
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onDislike = {
-                            val index = postsState.indexOf(post)
-                            postsState = postsState.toMutableList().apply {
-                                val updated = this[index].copy(
-                                    dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
-                                    isDisliked = !this[index].isDisliked,
-                                    isLiked = false,
-                                    likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
-                                )
-                                this[index] = updated
-                            }
-                        },
-                        onComment = {
-                            selectedPost = post
-                            showPostDetailDialog = true
-                        }
-                    )
                 }
             }
 
-            item {
-                ExploreAllButton(
-                    onClick = { showExploreDialog = true }
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    LostFoundSection(
+                        onMissingClick = {
+                            alertPost = postsState.find { it.id == "3" }
+                            showAlertDialog = true
+                        },
+                        onFoundClick = {
+                            alertPost = postsState.find { it.id == "4" }
+                            showAlertDialog = true
+                        }
+                    )
+                }
+
+                item {
+                    Text(
+                        "Community Stories",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                    )
+                }
+
+                items(postsState) { post ->
+                    when {
+                        post.isUrgent -> UrgentPostCard(
+                            post = post,
+                            onClick = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            },
+                            onLike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                        isLiked = !this[index].isLiked,
+                                        isDisliked = false,
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onDislike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                        isDisliked = !this[index].isDisliked,
+                                        isLiked = false,
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onComment = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            }
+                        )
+                        post.isAdoptionStory -> AdoptionStoryCard(
+                            post = post,
+                            onClick = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            },
+                            onLike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                        isLiked = !this[index].isLiked,
+                                        isDisliked = false,
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onDislike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                        isDisliked = !this[index].isDisliked,
+                                        isLiked = false,
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onComment = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            }
+                        )
+                        post.hasImage -> BlogPostCard(
+                            post = post,
+                            onClick = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            },
+                            onLike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                        isLiked = !this[index].isLiked,
+                                        isDisliked = false,
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onDislike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                        isDisliked = !this[index].isDisliked,
+                                        isLiked = false,
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onComment = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            }
+                        )
+                        else -> CommunityPostCard(
+                            post = post,
+                            onClick = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            },
+                            onLike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes + 1,
+                                        isLiked = !this[index].isLiked,
+                                        isDisliked = false,
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onDislike = {
+                                val index = postsState.indexOf(post)
+                                postsState = postsState.toMutableList().apply {
+                                    val updated = this[index].copy(
+                                        dislikes = if (this[index].isDisliked) this[index].dislikes - 1 else this[index].dislikes + 1,
+                                        isDisliked = !this[index].isDisliked,
+                                        isLiked = false,
+                                        likes = if (this[index].isLiked) this[index].likes - 1 else this[index].likes
+                                    )
+                                    this[index] = updated
+                                }
+                            },
+                            onComment = {
+                                selectedPost = post
+                                showPostDetailDialog = true
+                            }
+                        )
+                    }
+                }
+
+                item {
+                    ExploreAllButton(
+                        onClick = { showExploreDialog = true }
+                    )
+                }
             }
         }
     }

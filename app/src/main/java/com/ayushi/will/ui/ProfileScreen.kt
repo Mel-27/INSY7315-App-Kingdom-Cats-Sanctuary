@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material3.*
@@ -46,7 +47,7 @@ fun ProfileScreen(
     onToggleDarkMode: (Boolean) -> Unit = {},
     onEditProfile: () -> Unit = {},
     onLogout: () -> Unit = {},
-    onBack: () -> Unit = {}
+    onMenuClick: () -> Unit = {}
 ) {
     var showLogoutConfirm by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf(languageOptions.first()) }
@@ -61,14 +62,29 @@ fun ProfileScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
-            Text(
-                text = "Profile",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            // ========== TOP BAR - NO RED BACKGROUND ==========
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Profile",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             ProfileHeader(
                 userName = userName,
@@ -102,7 +118,6 @@ fun ProfileScreen(
                     onClick = { showCurrencyDialog = true }
                 )
             }
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -160,7 +175,6 @@ fun ProfileScreen(
         )
     }
 }
-
 
 @Composable
 private fun ProfileHeader(

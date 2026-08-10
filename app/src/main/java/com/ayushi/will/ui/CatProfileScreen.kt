@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
@@ -29,7 +28,6 @@ import coil.compose.AsyncImage
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
-import com.ayushi.will.ui.theme.KksWhite
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.style.TextAlign
 
@@ -107,14 +105,11 @@ private val dummyCats = List(TOTAL_CATS) { index ->
 
 private val filterChips = listOf("ALL RESIDENTS", "KITTENS", "SENIOR CATS")
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatProfileScreen(
     onBookViewingClick: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
-    onBack: () -> Unit = {}
+    onMenuClick: () -> Unit = {}
 ) {
-    // Selecting a chip filters displayedCats below by category
     var selectedFilter by remember { mutableStateOf(filterChips.first()) }
     val favoritedNames = remember { mutableStateOf(setOf<String>()) }
     var selectedCatForDetail by remember { mutableStateOf<CatCardDisplay?>(null) }
@@ -123,67 +118,45 @@ fun CatProfileScreen(
         when (selectedFilter) {
             "KITTENS" -> dummyCats.filter { it.category == CatCategory.KITTEN }
             "SENIOR CATS" -> dummyCats.filter { it.category == CatCategory.SENIOR }
-            else -> dummyCats // ALL RESIDENTS
+            else -> dummyCats
         }
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Find Your Companion",
-                        color = KksWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                actions = {
-                    // Menu Button
-                    IconButton(onClick = onMenuClick) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Menu",
-                            tint = KksWhite
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = KksRed
-                ),
-                modifier = Modifier.height(64.dp)
-            )
-        }
-    ) { padding ->
-        Surface(
+    Surface(color = MaterialTheme.colorScheme.background) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            color = MaterialTheme.colorScheme.background
         ) {
+            // ========== TOP BAR - NO RED BACKGROUND, NO BACK BUTTON ==========
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Find Your Companion",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                // Menu Icon - calls global navigation drawer
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 32.dp)
             ) {
                 item {
-                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
-                        Text(
-                            text = "Find your companion",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
+                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
                         Text(
                             text = "Our sanctuary is home to gentle souls seeking their forever families. Every adoption saves a life and brings warmth to a home.",
                             fontSize = 14.sp,
