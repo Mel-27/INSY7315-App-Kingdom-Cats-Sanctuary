@@ -388,3 +388,39 @@ private fun CatDescriptionDialog(cat: CatCardDisplay, onDismiss: () -> Unit) {
         }
     }
 }
+
+/*
+References:
+
+Android Developers (2026) Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Compose layout basics — Row, Column, Box, Card, Surface.
+Available at: https://developer.android.com/jetpack/compose/layouts/basics
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Material Design 3 in Compose.
+Available at: https://developer.android.com/jetpack/compose/designsystems/material3
+(Accessed: 10 August 2026).
+
+Android Developers (2026) State and Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose/state
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Lists and grids in Compose — LazyColumn, LazyRow.
+Available at: https://developer.android.com/jetpack/compose/lists
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Dialogs in Compose.
+Available at: https://developer.android.com/jetpack/compose/components/dialog
+(Accessed: 10 August 2026).
+
+Google (2026) Material Symbols and Icons.
+Available at: https://fonts.google.com/icons
+(Accessed: 10 August 2026).
+
+Coil (2026) Coil — Image loading for Android and Compose Multiplatform.
+Available at: https://coil-kt.github.io/coil/
+(Accessed: 10 August 2026).
+ */
