@@ -487,3 +487,44 @@ private fun DonationItemCard(item: DonationItem, modifier: Modifier = Modifier) 
         }
     }
 }
+
+/*
+References:
+
+Android Developers (2026) Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose
+ (Accessed: 10 August 2026).
+
+Android Developers (2026) Material Design 3 in Compose.
+Available at: https://developer.android.com/jetpack/compose/designsystems/material3
+(Accessed: 10 August 2026).
+
+Android Developers (2026) State and Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose/state
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Text fields — OutlinedTextField.
+Available at: https://developer.android.com/jetpack/compose/text/user-input
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Dialogs in Compose.
+Available at: https://developer.android.com/jetpack/compose/components/dialog
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Navigation with Compose.
+Available at: https://developer.android.com/jetpack/compose/navigation
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Style text — AnnotatedString and ClickableText.
+Available at: https://developer.android.com/jetpack/compose/text/style-text
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Images in Compose.
+Available at: https://developer.android.com/jetpack/compose/graphics/images/loading
+(Accessed: 10 August 2026).
+
+Android Developers (2026) Lists and grids — scrolling.
+Available at: https://developer.android.com/jetpack/compose/lists/scroll
+(Accessed: 10 August 2026).
+
+ */

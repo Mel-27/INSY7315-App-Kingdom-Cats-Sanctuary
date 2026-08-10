@@ -408,3 +408,70 @@ private fun SummaryRow(label: String, value: String) {
         Text(text = value, fontSize = 13.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.End)
     }
 }
+
+/*
+References:
+Android Developers (2026) Compose layout basics.
+Available at: https://developer.android.com/jetpack/compose/layouts/basics
+(Accessed: 10 August 2026).
+
+Button, OutlinedButton, IconButton
+Android Developers (2026) Material Design 3 in Compose.
+Available at: https://developer.android.com/jetpack/compose/designsystems/material3
+(Accessed: 10 August 2026).
+
+OutlinedTextField (full name, email, password, custom amount fields)
+Android Developers (2026) Text fields in Compose.
+Available at: https://developer.android.com/jetpack/compose/text/user-input
+(Accessed: 10 August 2026).
+
+remember, mutableStateOf, by delegation (selectedDay, selectedFilter, showConfirmation, etc.)
+Android Developers (2026) State and Jetpack Compose.
+ Available at: https://developer.android.com/jetpack/compose/state
+ (Accessed: 10 August 2026).
+
+Dialog (BookingConfirmedDialog, DonationConfirmedDialog, CatDescriptionDialog)
+Android Developers (2026) Dialogs in Compose.
+Available at: https://developer.android.com/jetpack/compose/components/dialog
+(Accessed: 10 August 2026).
+
+NavHost, composable(...), rememberNavController, popBackStack (AppNavHost)
+Android Developers (2026) Navigation with Compose.
+Available at: https://developer.android.com/jetpack/compose/navigation
+(Accessed: 10 August 2026).
+
+LazyColumn, LazyRow, items(...) (Cat Profile, Events)
+Android Developers (2026) Lists and grids in Compose.
+Available at: https://developer.android.com/jetpack/compose/lists
+(Accessed: 10 August 2026).
+
+verticalScroll, horizontalScroll, rememberScrollState (scrollable forms and chip rows)
+Android Developers (2026) Scroll in Compose.
+Available at: https://developer.android.com/jetpack/compose/touch-input/pointer-input/scroll
+(Accessed: 10 August 2026).
+
+Icon, Icons.Filled.* (Check, Menu, ChevronLeft/Right, Favorite)
+Google (2026) Material Symbols and Icons.
+Available at: https://fonts.google.com/icons
+(Accessed: 10 August 2026).
+
+buildAnnotatedString, ClickableText, SpanStyle (Donation screen "contact us" link)
+Android Developers (2026) Style text in Compose.
+Available at: https://developer.android.com/jetpack/compose/text/style-text
+(Accessed: 10 August 2026).
+
+Image, painterResource (local drawable images on Donation screen)
+Android Developers (2026) Images in Compose.
+Available at: https://developer.android.com/jetpack/compose/graphics/images/loading
+(Accessed: 10 August 2026).
+
+Kotlin language features (data class, List(n) { }, buildList, string templates)
+Kotlin (2026) Kotlin documentation.
+Available at: https://kotlinlang.org/docs/home.html
+(Accessed: 10 August 2026).
+
+MaterialTheme / colour scheme (MaterialTheme.colorScheme.*)
+Android Developers (2026) Material Theming in Compose.
+Available at: https://developer.android.com/jetpack/compose/designsystems/material3
+(Accessed: 10 August 2026).
+ */

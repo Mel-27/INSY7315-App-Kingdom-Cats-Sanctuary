@@ -71,3 +71,15 @@ fun RegisterScreen(
         )
     }
 }
+
+/*
+References:
+Android Developers (2026) State and Jetpack Compose.
+Available at: https://developer.android.com/jetpack/compose/state (Accessed: 10 August 2026).
+
+Android Developers (2026) Text fields — OutlinedTextField.
+Available at: https://developer.android.com/jetpack/compose/text/user-input (Accessed: 10 August 2026).
+
+Android Developers (2026) Navigation with Compose.
+Available at: https://developer.android.com/jetpack/compose/navigation (Accessed: 10 August 2026).
+ */
