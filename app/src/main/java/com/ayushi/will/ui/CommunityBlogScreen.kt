@@ -54,8 +54,8 @@ fun CommunityBlogScreen(
             listOf(
                 CommunityPost(
                     id = "1",
-                    authorName = "Sarah Chen",
-                    authorInitials = "SC",
+                    authorName = "Kingdom Cats Sanctuary Blog",
+                    authorInitials = "KCS",
                     type = "Expert Tip",
                     title = "Creating a 'Safe Room' for Your New Cat",
                     content = "When bringing a rescue home, start them in a small, quiet space with their bed, litter box, and food to prevent overwhelm.",
@@ -134,8 +134,8 @@ fun CommunityBlogScreen(
                 ),
                 CommunityPost(
                     id = "5",
-                    authorName = "Whiskers Blog",
-                    authorInitials = "WB",
+                    authorName = "Kingdom Cats Sanctuary Blog",
+                    authorInitials = "KCS",
                     type = "Blog Post",
                     title = "How to Cat-Proof Your Modern Home",
                     content = "Protect your furniture and keep your cat safe with these designer-approved tips.",
@@ -154,8 +154,8 @@ fun CommunityBlogScreen(
                 ),
                 CommunityPost(
                     id = "6",
-                    authorName = "Nutrition Guide",
-                    authorInitials = "NG",
+                    authorName = "Kingdom Cats Sanctuary Blog",
+                    authorInitials = "KCS",
                     type = "Blog Post",
                     title = "Decoding the Label: What Your Cat Really Needs",
                     content = "Learn how to spot high-quality ingredients and avoid common fillers.",

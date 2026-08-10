@@ -16,20 +16,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
+import com.ayushi.will.ui.theme.KksWhite
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.window.Dialog
 
-
 private const val MONTH_LABEL = "August 2026"
 private const val DAYS_IN_MONTH = 31
-private const val FIRST_DAY_COLUMN = 6 // August 1, 2026 falls on a Saturday (0 = Sunday)
+private const val FIRST_DAY_COLUMN = 6
 private val WEEKDAY_HEADERS = listOf("S", "M", "T", "W", "T", "F", "S")
 private val WEEKDAY_NAMES = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 
@@ -46,6 +48,7 @@ private val timeSlots = listOf(
     TimeSlot("Golden Hour Purrs", "01:00 PM - 01:45 PM")
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookSessionScreen(
     onBackToHome: () -> Unit = {},
@@ -57,11 +60,49 @@ fun BookSessionScreen(
     var email by remember { mutableStateOf("red@gmail.com") }
     var showConfirmation by remember { mutableStateOf(false) }
 
-    Surface(color = MaterialTheme.colorScheme.background) {
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Book a Session",
+                        color = KksWhite,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackToHome) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = KksWhite
+                        )
+                    }
+                },
+                actions = {
+                    // Menu Button
+                    IconButton(onClick = onMenuClick) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = "Menu",
+                            tint = KksWhite
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = KksRed
+                ),
+                modifier = Modifier.height(64.dp)
+            )
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .padding(padding)
                 .padding(20.dp)
         ) {
             Text(
@@ -192,7 +233,6 @@ fun BookSessionScreen(
                     }
                 )
             }
-
         }
     }
 }
@@ -271,9 +311,6 @@ private fun CalendarCard(selectedDay: Int, onDaySelected: (Int) -> Unit) {
             }
         }
     }
-
-
-
 }
 
 @Composable
@@ -394,4 +431,3 @@ private fun SummaryRow(label: String, value: String) {
         Text(text = value, fontSize = 13.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.End)
     }
 }
-

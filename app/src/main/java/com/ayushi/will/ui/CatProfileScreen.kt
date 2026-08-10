@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +29,7 @@ import coil.compose.AsyncImage
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
+import com.ayushi.will.ui.theme.KksWhite
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.style.TextAlign
 
@@ -104,9 +107,12 @@ private val dummyCats = List(TOTAL_CATS) { index ->
 
 private val filterChips = listOf("ALL RESIDENTS", "KITTENS", "SENIOR CATS")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatProfileScreen(
-    onBookViewingClick: () -> Unit = {}
+    onBookViewingClick: () -> Unit = {},
+    onMenuClick: () -> Unit = {},
+    onBack: () -> Unit = {}
 ) {
     // Selecting a chip filters displayedCats below by category
     var selectedFilter by remember { mutableStateOf(filterChips.first()) }
@@ -121,251 +127,291 @@ fun CatProfileScreen(
         }
     }
 
-    Surface(color = MaterialTheme.colorScheme.background) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp)
-        ) {
-            item {
-                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = {
                     Text(
-                        text = "Find your companion",
-                        fontSize = 26.sp,
+                        "Find Your Companion",
+                        color = KksWhite,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        fontSize = 20.sp
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "Our sanctuary is home to gentle souls seeking their forever families. Every adoption saves a life and brings warmth to a home.",
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            item {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(filterChips) { chip ->
-                        FilterChipItem(
-                            label = chip,
-                            selected = chip == selectedFilter,
-                            onClick = { selectedFilter = chip }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = KksWhite
+                        )
+                    }
+                },
+                actions = {
+                    // Menu Button
+                    IconButton(onClick = onMenuClick) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = "Menu",
+                            tint = KksWhite
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = KksRed
+                ),
+                modifier = Modifier.height(64.dp)
+            )
+        }
+    ) { padding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp)
+            ) {
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+                        Text(
+                            text = "Find your companion",
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Our sanctuary is home to gentle souls seeking their forever families. Every adoption saves a life and brings warmth to a home.",
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
 
-            if (displayedCats.isEmpty()) {
                 item {
-                    Text(
-                        text = "No cats in this category right now.",
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(filterChips) { chip ->
+                            FilterChipItem(
+                                label = chip,
+                                selected = chip == selectedFilter,
+                                onClick = { selectedFilter = chip }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                if (displayedCats.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No cats in this category right now.",
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                items(displayedCats, key = { it.name }) { cat ->
+                    CatProfileCard(
+                        cat = cat,
+                        isFavorited = favoritedNames.value.contains(cat.name),
+                        onFavoriteToggle = {
+                            favoritedNames.value = if (favoritedNames.value.contains(cat.name)) {
+                                favoritedNames.value - cat.name
+                            } else {
+                                favoritedNames.value + cat.name
+                            }
+                        },
+                        onBookViewingClick = onBookViewingClick,
+                        onCardClick = { selectedCatForDetail = cat },
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
                     )
                 }
             }
-
-            items(displayedCats, key = { it.name }) { cat ->
-                CatProfileCard(
-                    cat = cat,
-                    isFavorited = favoritedNames.value.contains(cat.name),
-                    onFavoriteToggle = {
-                        favoritedNames.value = if (favoritedNames.value.contains(cat.name)) {
-                            favoritedNames.value - cat.name
-                        } else {
-                            favoritedNames.value + cat.name
-                        }
-                    },
-                    onBookViewingClick = onBookViewingClick,
-                    onCardClick = { selectedCatForDetail = cat },
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
-                )
+            selectedCatForDetail?.let { cat ->
+                CatDescriptionDialog(cat = cat, onDismiss = { selectedCatForDetail = null })
             }
-        }
-        selectedCatForDetail?.let { cat ->
-            CatDescriptionDialog(cat = cat, onDismiss = { selectedCatForDetail = null })
         }
     }
 }
 
-    @Composable
-    private fun FilterChipItem(label: String, selected: Boolean, onClick: () -> Unit) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(if (selected) Color.Black else Color.Transparent)
-                .border(
-                    width = if (selected) 0.dp else 1.dp,
-                    color = KksCardStroke,
-                    shape = RoundedCornerShape(20.dp)
-                )
-                .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 10.dp)
-        ) {
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+@Composable
+private fun FilterChipItem(label: String, selected: Boolean, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(if (selected) Color.Black else Color.Transparent)
+            .border(
+                width = if (selected) 0.dp else 1.dp,
+                color = KksCardStroke,
+                shape = RoundedCornerShape(20.dp)
             )
-        }
-    }
-
-    @Composable
-    private fun CatProfileCard(
-        cat: CatCardDisplay,
-        isFavorited: Boolean,
-        onFavoriteToggle: () -> Unit,
-        onBookViewingClick: () -> Unit,
-        onCardClick: () -> Unit,
-        modifier: Modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        Card(
-            modifier = modifier.fillMaxWidth().clickable(onClick = onCardClick),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(1.dp, KksCardStroke),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp)
-                        .background(KksRed.copy(alpha = 0.1f))
-                ) {
-                    AsyncImage(
-                        model = cat.imageUrl,
-                        contentDescription = cat.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
 
-                    if (cat.badge != null) {
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(12.dp)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.Black.copy(alpha = 0.75f))
-                                .padding(horizontal = 10.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = cat.badge,
-                                color = Color.White,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
+@Composable
+private fun CatProfileCard(
+    cat: CatCardDisplay,
+    isFavorited: Boolean,
+    onFavoriteToggle: () -> Unit,
+    onBookViewingClick: () -> Unit,
+    onCardClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth().clickable(onClick = onCardClick),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, KksCardStroke),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .background(KksRed.copy(alpha = 0.1f))
+            ) {
+                AsyncImage(
+                    model = cat.imageUrl,
+                    contentDescription = cat.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
 
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = cat.name,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        IconButton(onClick = onFavoriteToggle) {
-                            Icon(
-                                imageVector = if (isFavorited) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                                contentDescription = "Favorite",
-                                tint = KksRed
-                            )
-                        }
-                    }
-
-                    Text(
-                        text = cat.ageGender,
-                        fontSize = 13.sp,
-                        color = KksTextSecondary
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        cat.traits.forEach { trait ->
-                            Text(
-                                text = trait,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = KksRed
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Button(
-                        onClick = onBookViewingClick,
-                        colors = ButtonDefaults.buttonColors(containerColor = KksRed),
-                        shape = RoundedCornerShape(10.dp),
+                if (cat.badge != null) {
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(46.dp)
+                            .align(Alignment.TopEnd)
+                            .padding(12.dp)
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(Color.Black.copy(alpha = 0.75f))
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            "BOOK A VIEWING",
+                            text = cat.badge,
                             color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-
                 }
-
             }
 
-        }
-    }
-
-        @Composable
-        private fun CatDescriptionDialog(cat: CatCardDisplay, onDismiss: () -> Unit) {
-            Dialog(onDismissRequest = onDismiss) {
-                Card(
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
-                    modifier = Modifier.fillMaxWidth()
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Text(
+                        text = cat.name,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(onClick = onFavoriteToggle) {
+                        Icon(
+                            imageVector = if (isFavorited) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = KksRed
+                        )
+                    }
+                }
+
+                Text(
+                    text = cat.ageGender,
+                    fontSize = 13.sp,
+                    color = KksTextSecondary
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    cat.traits.forEach { trait ->
                         Text(
-                            text = "About ${cat.name}",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = trait,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
                             color = KksRed
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = cat.description,
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Button(
-                            onClick = onDismiss,
-                            colors = ButtonDefaults.buttonColors(containerColor = KksRed),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                        ) {
-                            Text("CLOSE", fontWeight = FontWeight.Bold, fontSize = 13.sp, textAlign = TextAlign.Center)
-                        }
                     }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Button(
+                    onClick = onBookViewingClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(46.dp)
+                ) {
+                    Text(
+                        "BOOK A VIEWING",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
                 }
             }
         }
+    }
+}
 
+@Composable
+private fun CatDescriptionDialog(cat: CatCardDisplay, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "About ${cat.name}",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = KksRed
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = cat.description,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text("CLOSE", fontWeight = FontWeight.Bold, fontSize = 13.sp, textAlign = TextAlign.Center)
+                }
+            }
+        }
+    }
+}

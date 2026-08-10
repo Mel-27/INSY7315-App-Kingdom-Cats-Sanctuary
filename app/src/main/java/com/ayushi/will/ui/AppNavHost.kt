@@ -127,7 +127,9 @@ fun AppNavHost() {
             composable("cat_profile") {
                 currentRoute = "adopt"
                 CatProfileScreen(
-                    onBookViewingClick = { navController.navigate("book_session") }
+                    onBookViewingClick = { navController.navigate("book_session") },
+                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
+                    onBack = { navController.popBackStack() }  // ← Pass the back callback
                 )
             }
 
@@ -136,12 +138,12 @@ fun AppNavHost() {
                 currentRoute = "events"
                 EventsScreen(
                     onViewCalendar = { /* Handle calendar view */ },
-                    onRsvp = { eventTitle ->
-                        // Handle RSVP
-                    },
-                    onMenuClick = { drawerOpen = true }
+                    onRsvp = { eventTitle -> /* Handle RSVP */ },
+                    onMenuClick = { drawerOpen = true },
+                    onBack = { navController.popBackStack() }
                 )
             }
+
 
             // ========== DONATION SCREEN ==========
             composable("donation") {
@@ -178,8 +180,8 @@ fun AppNavHost() {
                 currentRoute = "reminders"
                 RemindersScreen(
                     onDismissReminder = { /* Handle dismiss */ },
-                    onMenuClick = { drawerOpen = true },
-                    onBack = { navController.popBackStack() }
+                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
+                    onBack = { navController.popBackStack() }  // ← Pass the back callback
                 )
             }
 
@@ -192,8 +194,8 @@ fun AppNavHost() {
                             popUpTo("home") { inclusive = true }
                         }
                     },
-                    onMenuClick = { drawerOpen = true },
-                    onBack = { navController.popBackStack() }
+                    onMenuClick = { drawerOpen = true },  // ← Pass the menu callback
+                    onBack = { navController.popBackStack() }  // ← Pass the back callback
                 )
             }
         }
