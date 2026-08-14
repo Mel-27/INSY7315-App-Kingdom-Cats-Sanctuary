@@ -28,10 +28,11 @@ import androidx.compose.ui.unit.sp
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.HorizontalDivider
+
 private data class AdminStat(val icon: ImageVector, val value: String, val label: String)
 
 private val adminStats = listOf(
@@ -56,6 +57,14 @@ private val bookingRequests = listOf(
     BookingRequest("Amy Govender", "amy@example.com", "Cat Viewing", "22 August 2026", "14:00")
 )
 
+private data class ManageItem(val icon: ImageVector, val title: String, val subtitle: String)
+
+private val manageItems = listOf(
+    ManageItem(Icons.Filled.Pets, "Cats", "Add or update sanctuary cats"),
+    ManageItem(Icons.Filled.CalendarMonth, "Events", "Manage sanctuary events"),
+    ManageItem(Icons.Filled.ListAlt, "Merchandise", "Update products and availability"),
+    ManageItem(Icons.Filled.Groups, "Community", "Review community posts")
+)
 @Composable
 fun AdminDashboardScreen(
     onMenuClick: () -> Unit = {}
@@ -112,7 +121,6 @@ fun AdminDashboardScreen(
                     AdminStatCard(stat)
                 }
             }
-           //
             Spacer(modifier = Modifier.height(28.dp))
 
             Row(
@@ -138,10 +146,28 @@ fun AdminDashboardScreen(
                 bookingRequests.forEachIndexed { index, request ->
                     BookingRequestRow(request = request)
                     if (index != bookingRequests.lastIndex) {
-                        Divider(color = KksCardStroke, thickness = 1.dp)
+                        HorizontalDivider(Modifier, thickness = 1.dp, color = KksCardStroke)
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                Text(text = "Manage", fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Quick access to sanctuary content.", fontSize = 12.sp, color = KksTextSecondary)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                manageItems.forEach { item ->
+                    ManageRow(item = item)
+                }
+            }
+            //
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -224,5 +250,32 @@ private fun StatusBadge(text: String, color: androidx.compose.ui.graphics.Color)
             .padding(horizontal = 8.dp, vertical = 3.dp)
     ) {
         Text(text = text, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = color)
+    }
+}
+
+@Composable
+private fun ManageRow(item: ManageItem) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, KksCardStroke)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(item.icon, contentDescription = null, tint = KksRed, modifier = Modifier.size(20.dp))
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = item.title, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = item.subtitle, fontSize = 11.sp, color = KksTextSecondary)
+            }
+            Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = KksTextSecondary)
+        }
     }
 }
