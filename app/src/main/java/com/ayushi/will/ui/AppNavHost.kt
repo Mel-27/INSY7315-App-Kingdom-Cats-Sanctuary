@@ -37,6 +37,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.res.painterResource
 
+private const val ADMIN_EMAIL = "admin@kingdomcats.com"
+private const val ADMIN_PASSWORD = "Admin123!"
+
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost() {
@@ -69,8 +72,9 @@ fun AppNavHost() {
             // Login Screen
             composable("login") {
                 LoginScreen(
-                    onLoginClick = { _, _ ->
-                        navController.navigate("home") {
+                    onLoginClick = { email, password ->
+                        val destination = if (email == ADMIN_EMAIL && password == ADMIN_PASSWORD) "admin" else "home"
+                        navController.navigate(destination) {
                             popUpTo("login") { inclusive = true }
                         }
                     },
@@ -127,6 +131,14 @@ fun AppNavHost() {
                 currentRoute = "adopt"
                 CatProfileScreen(
                     onBookViewingClick = { navController.navigate("book_session") },
+                    onMenuClick = { drawerOpen = true }
+                )
+            }
+
+            //Admin dashboard screen
+            composable("admin") {
+                currentRoute = "admin"
+                AdminDashboardScreen(
                     onMenuClick = { drawerOpen = true }
                 )
             }
