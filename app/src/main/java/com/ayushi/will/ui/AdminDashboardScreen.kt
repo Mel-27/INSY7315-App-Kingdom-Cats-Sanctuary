@@ -28,7 +28,10 @@ import androidx.compose.ui.unit.sp
 import com.ayushi.will.ui.theme.KksCardStroke
 import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksTextSecondary
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 private data class AdminStat(val icon: ImageVector, val value: String, val label: String)
 
 private val adminStats = listOf(
@@ -37,6 +40,20 @@ private val adminStats = listOf(
     AdminStat(Icons.Filled.ListAlt, "18", "Event RSVPs"),
     AdminStat(Icons.Filled.FavoriteBorder, "R12,450", "Donations received"),
     AdminStat(Icons.Filled.Forum, "6", "Recent community posts")
+)
+
+private data class BookingRequest(
+    val name: String,
+    val email: String,
+    val sessionType: String,
+    val date: String,
+    val time: String
+)
+
+private val bookingRequests = listOf(
+    BookingRequest("Sarah Naidoo", "sarah@example.com", "Cat Viewing", "20 August 2026", "10:00"),
+    BookingRequest("Jason Singh", "jason@example.com", "Petting Session", "21 August 2026", "11:00"),
+    BookingRequest("Amy Govender", "amy@example.com", "Cat Viewing", "22 August 2026", "14:00")
 )
 
 @Composable
@@ -95,7 +112,36 @@ fun AdminDashboardScreen(
                     AdminStatCard(stat)
                 }
             }
+           //
+            Spacer(modifier = Modifier.height(28.dp))
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(text = "Booking requests", fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "Review visitors waiting for confirmation.", fontSize = 12.sp, color = KksTextSecondary)
+                }
+                Text(text = "VIEW ALL", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = KksRed)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                bookingRequests.forEachIndexed { index, request ->
+                    BookingRequestRow(request = request)
+                    if (index != bookingRequests.lastIndex) {
+                        Divider(color = KksCardStroke, thickness = 1.dp)
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -124,5 +170,59 @@ private fun AdminStatCard(stat: AdminStat) {
             Spacer(modifier = Modifier.height(2.dp))
             Text(text = stat.label, fontSize = 11.sp, color = KksTextSecondary)
         }
+    }
+}
+
+@Composable
+private fun BookingRequestRow(request: BookingRequest) {
+    Column(modifier = Modifier.padding(vertical = 14.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = request.name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    StatusBadge(text = "PENDING", color = androidx.compose.ui.graphics.Color(0xFFB8860B))
+                }
+                Text(text = request.email, fontSize = 12.sp, color = KksTextSecondary)
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "Session: ${request.sessionType}   Date: ${request.date}   Time: ${request.time}",
+            fontSize = 11.sp,
+            color = KksTextSecondary
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Accept", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
+            OutlinedButton(
+                onClick = { },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Reject", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatusBadge(text: String, color: androidx.compose.ui.graphics.Color) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(color.copy(alpha = 0.12f))
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        Text(text = text, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = color)
     }
 }
