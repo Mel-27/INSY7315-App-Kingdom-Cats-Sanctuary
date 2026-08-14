@@ -32,6 +32,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.filled.Info
 
 private data class AdminStat(val icon: ImageVector, val value: String, val label: String)
 
@@ -217,7 +218,7 @@ fun AdminDashboardScreen(
                     EventRsvpCard(rsvp = rsvp)
                 }
             }
-            //
+
             Spacer(modifier = Modifier.height(28.dp))
 
             Row(
@@ -244,6 +245,32 @@ fun AdminDashboardScreen(
                     DonationRow(donation = donation)
                     if (index != recentDonations.lastIndex) {
                         HorizontalDivider(Modifier, thickness = 1.dp, color = KksCardStroke)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, KksCardStroke)
+            ) {
+                Row(modifier = Modifier.padding(16.dp)) {
+                    Icon(Icons.Filled.Info, contentDescription = null, tint = KksRed, modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(text = "Admin reminder", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Review pending booking requests and event RSVPs regularly. Accepted bookings and RSVPs will appear as confirmed to visitors, while rejected requests can be followed up with by the sanctuary.",
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp,
+                            color = KksTextSecondary
+                        )
                     }
                 }
             }
