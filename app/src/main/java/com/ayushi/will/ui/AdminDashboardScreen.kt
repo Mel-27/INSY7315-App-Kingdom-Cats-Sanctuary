@@ -65,6 +65,22 @@ private val manageItems = listOf(
     ManageItem(Icons.Filled.ListAlt, "Merchandise", "Update products and availability"),
     ManageItem(Icons.Filled.Groups, "Community", "Review community posts")
 )
+
+private data class EventRsvp(
+    val attendee: String,
+    val email: String,
+    val eventName: String,
+    val eventDateTime: String,
+    val guests: Int,
+    val confirmed: Boolean
+)
+
+private val eventRsvps = listOf(
+    EventRsvp("Thandiwe Ngcobo", "thandiwe@example.com", "KCS Adoption Day", "24 August 2026 · 10:00", 2, confirmed = true),
+    EventRsvp("Jason Singh", "jason@example.com", "Fundraising Walk", "5 September 2026 · 09:00", 1, confirmed = false),
+    EventRsvp("Amy Govender", "amy@example.com", "KCS Adoption Day", "24 August 2026 · 10:00", 3, confirmed = false)
+)
+
 @Composable
 fun AdminDashboardScreen(
     onMenuClick: () -> Unit = {}
@@ -165,6 +181,32 @@ fun AdminDashboardScreen(
             ) {
                 manageItems.forEach { item ->
                     ManageRow(item = item)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(text = "Event RSVPs", fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "See who has RSVP'd for upcoming sanctuary events.", fontSize = 12.sp, color = KksTextSecondary)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                eventRsvps.forEach { rsvp ->
+                    EventRsvpCard(rsvp = rsvp)
                 }
             }
             //
@@ -276,6 +318,62 @@ private fun ManageRow(item: ManageItem) {
                 Text(text = item.subtitle, fontSize = 11.sp, color = KksTextSecondary)
             }
             Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = KksTextSecondary)
+        }
+    }
+}
+
+@Composable
+private fun EventRsvpCard(rsvp: EventRsvp) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, KksCardStroke)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(text = rsvp.attendee, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Text(text = rsvp.email, fontSize = 11.sp, color = KksTextSecondary)
+                }
+                if (rsvp.confirmed) {
+                    StatusBadge(text = "CONFIRMED", color = androidx.compose.ui.graphics.Color(0xFF2E7D32))
+                } else {
+                    StatusBadge(text = "PENDING", color = androidx.compose.ui.graphics.Color(0xFFB8860B))
+                }
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(text = "${rsvp.eventName} · ${rsvp.eventDateTime}", fontSize = 12.sp, color = KksTextSecondary)
+            Text(text = "${rsvp.guests} guest${if (rsvp.guests != 1) "s" else ""}", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (rsvp.confirmed) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    OutlinedButton(onClick = { }, shape = RoundedCornerShape(8.dp)) {
+                        Text("View", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                    OutlinedButton(onClick = { }, shape = RoundedCornerShape(8.dp)) {
+                        Text("Cancel", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            } else {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Button(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(containerColor = KksRed),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Accept", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                    OutlinedButton(onClick = { }, shape = RoundedCornerShape(8.dp)) {
+                        Text("Reject", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
         }
     }
 }
