@@ -9,11 +9,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Forum
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.*
@@ -31,6 +29,8 @@ import com.ayushi.will.ui.theme.KksTextSecondary
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material3.HorizontalDivider
 
 private data class AdminStat(val icon: ImageVector, val value: String, val label: String)
@@ -38,7 +38,7 @@ private data class AdminStat(val icon: ImageVector, val value: String, val label
 private val adminStats = listOf(
     AdminStat(Icons.Filled.Pets, "24", "Sanctuary cats"),
     AdminStat(Icons.Filled.CalendarMonth, "8", "Upcoming bookings"),
-    AdminStat(Icons.Filled.ListAlt, "18", "Event RSVPs"),
+    AdminStat(Icons.AutoMirrored.Filled.ListAlt, "18", "Event RSVPs"),
     AdminStat(Icons.Filled.FavoriteBorder, "R12,450", "Donations received"),
     AdminStat(Icons.Filled.Forum, "6", "Recent community posts")
 )
@@ -62,7 +62,7 @@ private data class ManageItem(val icon: ImageVector, val title: String, val subt
 private val manageItems = listOf(
     ManageItem(Icons.Filled.Pets, "Cats", "Add or update sanctuary cats"),
     ManageItem(Icons.Filled.CalendarMonth, "Events", "Manage sanctuary events"),
-    ManageItem(Icons.Filled.ListAlt, "Merchandise", "Update products and availability"),
+    ManageItem(Icons.AutoMirrored.Filled.ListAlt, "Merchandise", "Update products and availability"),
     ManageItem(Icons.Filled.Groups, "Community", "Review community posts")
 )
 
@@ -79,6 +79,14 @@ private val eventRsvps = listOf(
     EventRsvp("Thandiwe Ngcobo", "thandiwe@example.com", "KCS Adoption Day", "24 August 2026 · 10:00", 2, confirmed = true),
     EventRsvp("Jason Singh", "jason@example.com", "Fundraising Walk", "5 September 2026 · 09:00", 1, confirmed = false),
     EventRsvp("Amy Govender", "amy@example.com", "KCS Adoption Day", "24 August 2026 · 10:00", 3, confirmed = false)
+)
+
+private data class AdminDonation(val donor: String, val amount: String, val method: String, val completed: Boolean)
+
+private val recentDonations = listOf(
+    AdminDonation("John Smith", "R500.00", "EFT", completed = true),
+    AdminDonation("Anonymous", "R250.00", "Card", completed = true),
+    AdminDonation("Priya Naidoo", "R1,000.00", "PayPal", completed = false)
 )
 
 @Composable
@@ -210,6 +218,36 @@ fun AdminDashboardScreen(
                 }
             }
             //
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(text = "Recent donations", fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "The latest contributions made to the sanctuary.", fontSize = 12.sp, color = KksTextSecondary)
+                }
+                Text(text = "VIEW ALL", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = KksRed)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                recentDonations.forEachIndexed { index, donation ->
+                    DonationRow(donation = donation)
+                    if (index != recentDonations.lastIndex) {
+                        HorizontalDivider(Modifier, thickness = 1.dp, color = KksCardStroke)
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -374,6 +412,28 @@ private fun EventRsvpCard(rsvp: EventRsvp) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DonationRow(donation: AdminDonation) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(text = donation.donor, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text(text = donation.method, fontSize = 11.sp, color = KksTextSecondary)
+        }
+        Text(text = donation.amount, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        if (donation.completed) {
+            StatusBadge(text = "Completed", color = androidx.compose.ui.graphics.Color(0xFF2E7D32))
+        } else {
+            StatusBadge(text = "Pending", color = androidx.compose.ui.graphics.Color(0xFFB8860B))
         }
     }
 }
