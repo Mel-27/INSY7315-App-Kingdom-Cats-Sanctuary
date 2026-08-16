@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Alignment
@@ -168,7 +169,7 @@ fun EventsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
@@ -187,6 +188,20 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
             modifier = Modifier
                 .matchParentSize()
                 .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.40f),
+                            Color.Black.copy(alpha = 0.60f)
+                        )
+                    )
+                )
         )
         Column(
             modifier = Modifier
@@ -212,12 +227,13 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
                 text = "Gather for a cause, stay for the whiskers.",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Join us for our upcoming sanctuary events. Every ticket purchased and every donation made goes directly to the medical care and comfort of our feline residents.",
                 fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(16.dp))

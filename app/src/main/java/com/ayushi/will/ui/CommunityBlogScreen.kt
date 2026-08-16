@@ -165,7 +165,7 @@ fun CommunityBlogScreen(
                     imageUrl = "",
                     isAdoptionStory = false,
                     hasImage = true,
-                    localImageRes = R.drawable.cat_food,
+                    localImageRes = R.drawable.cat_ingredients,
                     isLiked = false,
                     isDisliked = false
                 )
