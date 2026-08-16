@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Alignment
@@ -188,6 +189,20 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
                 .matchParentSize()
                 .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
         )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.15f),
+                            Color.Black.copy(alpha = 0.55f)
+                        )
+                    )
+                )
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth(0.62f)
@@ -218,6 +233,7 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
             Text(
                 text = "Join us for our upcoming sanctuary events. Every ticket purchased and every donation made goes directly to the medical care and comfort of our feline residents.",
                 fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(16.dp))
