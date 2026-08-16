@@ -169,7 +169,7 @@ fun EventsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
@@ -197,8 +197,8 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color.Black.copy(alpha = 0.15f),
-                            Color.Black.copy(alpha = 0.55f)
+                            Color.Black.copy(alpha = 0.40f),
+                            Color.Black.copy(alpha = 0.60f)
                         )
                     )
                 )
@@ -227,7 +227,7 @@ private fun EventsHeroSection(onViewCalendar: () -> Unit) {
                 text = "Gather for a cause, stay for the whiskers.",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
