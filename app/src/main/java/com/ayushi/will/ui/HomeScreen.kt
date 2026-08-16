@@ -44,6 +44,19 @@ import com.ayushi.will.ui.theme.KksRed
 import com.ayushi.will.ui.theme.KksStar
 import com.ayushi.will.ui.theme.KksTextSecondary
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
+
+private const val SANCTUARY_STORY = """At Kingdom Cats Sanctuary, "no-kill" isn't just a label — it's a sacred vow. We believe no cat should ever be euthanised due to lack of space or treatable medical conditions. We provide a lifetime commitment to every resident who enters our gates, ensuring they live with dignity, love, and professional care for as long as they need us.
+
+Kingdom Cats Sanctuary has been caring for cats for 20 years, but the story began much earlier. Our founders, Greg Bower and Jenny Bower, have dedicated 40 years of their lives to rescuing and protecting cats in need. Their journey began with two unforgettable rescues: Rudi, who was tragically dumped in a box, and Whiskey, a feral cat discovered at the Beachwood Country Club. From those first two rescues, their passion grew into a lifelong mission — and the rest is history.
+
+Today, the sanctuary provides the public with an opportunity to connect with our cats through dedicated cat-petting sessions. Visitors can book a session to spend time with our residents, experience their unique personalities, and learn more about the work involved in caring for rescued cats.
+
+For those considering adoption, visitors can also book a viewing and adoption session with a specific cat. Through our website, prospective adopters can choose a cat they are interested in and arrange a session to meet them in person. This gives both the visitor and the cat an opportunity to become familiar with one another before an adoption decision is made.
+
+The sanctuary also welcomes the support of our community through donations. Contributions can be made financially or through much-needed items that help us provide food, shelter, enrichment, medical care, and everyday necessities for our cats. A detailed list of requested donation items and their specific categories can be found on our Donation page, making it easy for supporters to see exactly where their contributions can make a difference.
+
+After 40 years of rescuing cats, Greg and Jenny's mission remains the same: to give vulnerable cats a safe place where they are valued, protected, and loved. What began with Rudi and Whiskey has grown into a sanctuary dedicated to giving every cat the second chance they deserve."""
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -369,6 +382,8 @@ private fun HeroSection(
 // ========== 2. NO-KILL PROMISE ==========
 @Composable
 private fun NoKillPromiseSection() {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -390,10 +405,20 @@ private fun NoKillPromiseSection() {
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "At Kingdom Cats Sanctuary, \"no-kill\" isn't just a label — it's a sacred vow. We believe no cat should ever be euthanized due to lack of space or treatable medical conditions. We provide a lifetime commitment to every resident who enters our gates.",
+                text = SANCTUARY_STORY,
                 fontSize = 13.sp,
                 lineHeight = 18.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = if (expanded) Int.MAX_VALUE else 4,
+                overflow = if (expanded) TextOverflow.Clip else TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = if (expanded) "Read less" else "Read more",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = KksRed,
+                modifier = Modifier.clickable { expanded = !expanded }
             )
         }
     }
